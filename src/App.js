@@ -118,7 +118,7 @@ useEffect(() => {
         />
 
         <Route 
-          path='/contact'
+          path='/team'
           element={<Contact />}
         />
         
