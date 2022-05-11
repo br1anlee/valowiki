@@ -222,6 +222,9 @@ export default function Navbar() {
                 </ul>
           </li>
 
+          <li className="padding-top">
+            <Link to="/team">Team</Link>
+          </li>
         </ul>
     </nav>
   )
