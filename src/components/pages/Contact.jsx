@@ -43,7 +43,7 @@ export default function Contact() {
           <div className="text">
             <h3>Brian Lee</h3>
             <p className="inner-text">
-            I’m a Full Stack Web Developer based in Los Angeles who is inspired to provide creative solutions to open ended problems and driven to master his craft. With my experience in the social service industry, I am confident on how adaptable I am working under any environment while being able to provide exceptional communication and feedback to my team members.
+            I am a Full Stack Web Developer based in Los Angeles who is inspired to provide creative solutions to open ended problems and driven to master his craft. With my experience in the social service industry, I am confident on how adaptable I am working under any environment while being able to provide exceptional communication and feedback to my team members.
             </p>
             <a href="https://github.com/br1anlee" target="_blank">
               <FaGithub size={30}/>
