@@ -10,6 +10,7 @@ export default function Maps({ gameMaps }) {
             <Link to={`/maps/${map.uuid}`}>
                <img src={map.listViewIcon} alt={map.displayName} />
             </Link>
+
          </section>
       )
    })

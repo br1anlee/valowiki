@@ -133,8 +133,8 @@ useEffect(() => {
         />
 
       </Routes>
-
       <Footer />
+
     </Router>
   );
 }
