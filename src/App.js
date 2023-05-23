@@ -11,7 +11,6 @@ import Agents from './components/pages/Agents';
 import axios from 'axios'
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
-import Map from './components/pages/Map';
 import Agent from './components/pages/Agent';
 import Weapons from './components/pages/Weapons';
 import Weapon from './components/pages/Weapon';
@@ -75,11 +74,6 @@ useEffect(() => {
         <Route 
           path = '/maps'
           element = {<Maps gameMaps={gameMaps}/>}
-        />
-
-        <Route 
-          path = '/maps/:id'
-          element = {<Map />}
         />
 
         <Route 
