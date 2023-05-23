@@ -9,6 +9,7 @@ export default function WeaponDetails({ weaponData, weaponStats, weaponShop, wea
                style={{ padding: "1.5rem" }}
                src={skin.chromas[0].fullRender}
                alt={skin.displayName}
+               className="weapon-skin-image"
             />
          </div>
       )

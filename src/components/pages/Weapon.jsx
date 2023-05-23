@@ -18,7 +18,6 @@ export default function Weapon() {
             setWeaponStats(response.data.data.weaponStats)
             setWeaponShop(response.data.data.shopData)
             setWeaponSkins(response.data.data.skins)
-            // console.log(response.data)
          })
          .catch(console.log)
    }, [id])

@@ -92,32 +92,6 @@ export default function Navbar() {
 
           <li className="padding-top">
             <Link to="/maps">Maps</Link>
-            <ul>
-              <li>
-                <Link to="/maps/7eaecc1b-4337-bbf6-6ab9-04b8f06b3319">Ascent</Link>
-              </li>
-              <li>
-                <Link to="/maps/d960549e-485c-e861-8d71-aa9d1aed12a2">Split</Link>
-              </li>
-              <li>
-                <Link to="/maps/b529448b-4d60-346e-e89e-00a4c527a405">Fracture</Link>
-              </li>
-              <li>
-                <Link to="/maps/2c9d57ec-4431-9c5e-2939-8f9ef6dd5cba">Bind</Link>
-              </li>
-              <li>
-                <Link to="/maps/2fb9a4fd-47b8-4e7d-a969-74b4046ebd53">Breeze</Link>
-              </li>
-              <li>
-                <Link to="/maps/e2ad5c54-4114-a870-9641-8ea21279579a">Icebox</Link>
-              </li>
-              <li>
-                <Link to="/maps/ee613ee9-28b7-4beb-9666-08db13bb2244">The Range</Link>
-              </li>
-              <li>
-                <Link to="/maps/2bee0dc9-4ffe-519b-1cbd-7fbe763a6047">Haven</Link>
-              </li>
-            </ul>
           </li>
 
           <li className="padding-top">

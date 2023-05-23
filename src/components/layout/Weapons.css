@@ -34,15 +34,21 @@
 }
 
 .weapons-img {
-  /* padding-top: 2rem; */
-  padding-bottom: 4rem;
+  padding-bottom: 2rem;
+  width: 500px;
+  height: auto;
+}
+
+.weapon-skin-image {
+  width: 300px;
+  height: auto;
 }
 
 .skins-container {
   display: flex;
-  flex-direction: row;
+  flex-direction: reverse;
   flex-wrap: wrap;
-  align-items: center;
+  /* align-items: center; */
   justify-content: center;
   padding: 1rem;
 }

@@ -1,65 +1,81 @@
-.agentContainer {
-  background-color: rgb(10,18,27);
-  color: white;
+.header-img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 5px;
+}
+
+.agent-container {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.roles-title {
+  padding: 5px;
+}
+
+.role-name {
+  font-weight: bold;
   text-align: center;
 }
 
-.wrapper {
-  display: inline-flex;
-  flex-direction: row;
-  justify-content: space-between;
-  /* flex-wrap: wrap; */
-  margin: 20px;
+.role-description {
+  border: 1px solid red;
+  box-sizing: border-box;
+  flex-basis: calc(50% - 10px);
+  padding: 5px;
+  margin: 5px;
 }
 
-.card {
-/* Add shadows to create the "card" effect */
-transition: 0.3s;
-display: flex;
-flex-direction: row;
-border: 1px solid white;
-width: 220px;
+.role-description p {
+  text-align: center;
 }
 
-/* On mouse-over, add a deeper shadow */
-.card:hover {
-box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+.agent-list {
+  text-align: center;
+  padding: 10px;
 }
 
-/* Add some padding inside the card container */
-.container {
-padding: 2px 16px;
-}
-
-.card__image {
+.agent-icon {
   width: 100px;
   height: 100px;
 }
 
-.agent-link {
-  color: red;
-  text-decoration: none;
-  padding-bottom: 2px;
+.agent-list-container {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 5px;
+  border: 1px solid red;
 }
 
-.roleContainer {
-width: 50%;
-height: 50%;
-float: left;
-border: 1px solid white;
-padding: 24px;
-margin: 53px;
+.agent-row {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 5px;
+  padding: 5px;
 }
 
-.agentTitle{
-padding: 10px;
+.agent-item {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
 }
 
-.roleName {
-color: red;
-padding: 3px;
-}
+/* Responsive Style */
+@media screen and (max-width: 768px) {
+  .agent-list-container {
+    flex-wrap: nowrap;
+    justify-content: center;
+  }
 
-.agent-img {
-width: 60vw;
+  .agent-row {
+    grid-template-columns: 1fr;
+  }
+
+  .role-description {
+    flex-basis: 100%;
+  }
 }

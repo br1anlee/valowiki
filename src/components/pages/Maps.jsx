@@ -6,10 +6,7 @@ export default function Maps({ gameMaps }) {
       return (
          <section key={`map-${idx}`} className="center">
             <h1>{map.displayName}</h1>
-
-            <Link to={`/maps/${map.uuid}`}>
                <img src={map.listViewIcon} alt={map.displayName} />
-            </Link>
          </section>
       )
    })
