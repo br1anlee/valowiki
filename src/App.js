@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import {
   BrowserRouter as Router,
   Route,
@@ -7,11 +7,16 @@ import {
 import axios from 'axios'
 import Home from './components/pages/Home';
 import Maps from './components/pages/Maps';
+import MapDetail from './components/pages/MapDetail';
 import Agents from './components/pages/Agents';
 import Sidebar from './components/layout/Sidebar';
+import ScrollToTop from './components/layout/ScrollToTop';
 import Footer from './components/layout/Footer';
 import Agent from './components/pages/Agent';
 import Weapons from './components/pages/Weapons';
+import Compare from './components/pages/Compare';
+import Bundles from './components/pages/Bundles';
+import BundleDetail from './components/pages/BundleDetail';
 import Weapon from './components/pages/Weapon';
 import Lineups from './components/pages/Lineups';
 import AgentLineups from './components/pages/AgentLineups';
@@ -25,36 +30,68 @@ function App() {
   const [agents, setAgents] = useState([])
   const [gameMaps, setGameMaps] = useState([])
   const [weapons, setWeapons] = useState([])
+  const [status, setStatus] = useState('loading')
+  // Bumping this re-runs the effect, which is what "Try again" does.
+  const [attempt, setAttempt] = useState(0)
 
-  // The sidebar and the listing pages all read from these three collections,
-  // so they are fetched once here and passed down.
+  const retry = useCallback(() => setAttempt((n) => n + 1), [])
+
+  // The sidebar and every listing page read from these three collections, so
+  // they are fetched once here and shared.
   useEffect(() => {
-    const requests = [
-      ['/agents?isPlayableCharacter=true', setAgents],
-      ['/maps', setGameMaps],
-      ['/weapons', setWeapons],
-    ]
+    let cancelled = false
+    setStatus('loading')
 
-    requests.forEach(([path, setter]) => {
-      axios
-        .get(`${API}${path}`)
-        .then((response) => setter(response.data.data))
-        .catch((error) => console.log(error))
-    })
-  }, [])
+    Promise.all([
+      axios.get(`${API}/agents?isPlayableCharacter=true`),
+      axios.get(`${API}/maps`),
+      axios.get(`${API}/weapons`),
+    ])
+      .then(([agentRes, mapRes, weaponRes]) => {
+        if (cancelled) return
 
+        setAgents(agentRes.data.data)
+        setGameMaps(mapRes.data.data)
+        setWeapons(weaponRes.data.data)
+        setStatus('ready')
+      })
+      .catch((error) => {
+        if (cancelled) return
+
+        console.error('Valorant API request failed', error)
+        setStatus('error')
+      })
+
+    return () => {
+      cancelled = true
+    }
+  }, [attempt])
+
+  const data = { status, onRetry: retry }
+
+  // PUBLIC_URL is empty in dev and on root-domain hosts; on GitHub Pages the
+  // deploy workflow sets it to "/valowiki".
   return (
-    <Router>
+    <Router basename={process.env.PUBLIC_URL || "/"}>
+      <ScrollToTop />
+
+      {/* Lets keyboard users jump the sidebar, which is long once expanded. */}
+      <a className="skip-link" href="#main">Skip to content</a>
+
       <Sidebar agents={agents} gameMaps={gameMaps} weapons={weapons} />
 
-      <main className="app-main">
+      <main className="app-main" id="main" tabIndex={-1}>
         <Routes>
           <Route path='/' element={<Home />} />
-          <Route path='/maps' element={<Maps gameMaps={gameMaps} />} />
-          <Route path='/agents' element={<Agents agents={agents} />} />
+          <Route path='/maps' element={<Maps gameMaps={gameMaps} {...data} />} />
+          <Route path='/maps/:id' element={<MapDetail gameMaps={gameMaps} {...data} />} />
+          <Route path='/agents' element={<Agents agents={agents} {...data} />} />
           <Route path='/agents/:id' element={<Agent />} />
-          <Route path='/weapons' element={<Weapons weapons={weapons} />} />
+          <Route path='/weapons' element={<Weapons weapons={weapons} {...data} />} />
           <Route path='/weapons/:id' element={<Weapon />} />
+          <Route path='/compare' element={<Compare weapons={weapons} {...data} />} />
+          <Route path='/bundles' element={<Bundles weapons={weapons} {...data} />} />
+          <Route path='/bundles/:id' element={<BundleDetail weapons={weapons} {...data} />} />
           <Route path='/lineups' element={<Lineups />} />
           <Route path='/lineups/:agent' element={<AgentLineups />} />
           <Route path='/team' element={<Contact />} />

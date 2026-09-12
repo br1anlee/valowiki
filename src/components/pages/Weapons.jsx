@@ -2,8 +2,9 @@ import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import "../layout/Weapons.css";
 import { groupWeaponsByCategory } from "../../utils/valorant";
+import DataState, { SkeletonGrid } from "../layout/DataState";
 
-export default function Weapons({ weapons }) {
+export default function Weapons({ weapons, status, onRetry }) {
   const [query, setQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState("All");
 
@@ -43,9 +44,19 @@ export default function Weapons({ weapons }) {
       <header className="page-head">
         <span className="eyebrow">Valowiki</span>
         <h1>Weapons</h1>
-        <p>{weapons.length} weapons across {categories.length} categories</p>
+        <p>
+          {status === "ready"
+            ? `${weapons.length} weapons across ${categories.length} categories`
+            : "Every weapon, grouped by shop category"}
+        </p>
       </header>
 
+      <DataState
+        status={status}
+        onRetry={onRetry}
+        what="weapons"
+        skeleton={<SkeletonGrid count={8} variant="wide" />}
+      >
       <div className="filter-bar">
         <input
           type="search"
@@ -77,15 +88,15 @@ export default function Weapons({ weapons }) {
             </button>
           ))}
         </div>
-        <span className="result-count">
+        <span className="result-count" role="status" aria-live="polite">
           {totalVisible} of {weapons.length}
         </span>
       </div>
 
       {visibleCategories.length === 0 ? (
-        <p className="empty-state">No weapons match that search.</p>
-      ) : (
-        visibleCategories.map((group) => (
+          <p className="empty-state">No weapons match that search.</p>
+        ) : (
+          visibleCategories.map((group) => (
           <section key={group.key} className="weapon-section">
             <h2 className="section-title">{group.title}</h2>
             <div className="weapon-grid">
@@ -113,6 +124,7 @@ export default function Weapons({ weapons }) {
           </section>
         ))
       )}
+      </DataState>
     </div>
   );
 }

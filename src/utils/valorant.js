@@ -94,3 +94,35 @@ export const mapSlug = (displayName = "") =>
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-|-$/g, "");
+
+// Callouts carry game-world coordinates; each map ships the transform that
+// projects them onto its minimap image (displayIcon). Note the axes swap: the
+// game's y feeds the image's x. Returns fractions of the image, 0-1.
+export function calloutPosition(map, callout) {
+  const { x, y } = callout.location;
+
+  return {
+    left: y * map.xMultiplier + map.xScalarToAdd,
+    top: x * map.yMultiplier + map.yScalarToAdd,
+  };
+}
+
+// Callouts grouped by their super-region (A, B, Mid, Attacker Side...), which
+// is how players actually talk about a map.
+export function calloutsBySide(map) {
+  const groups = new Map();
+
+  (map?.callouts || []).forEach((callout) => {
+    const side = callout.superRegionName || "Other";
+    if (!groups.has(side)) groups.set(side, []);
+    groups.get(side).push(callout);
+  });
+
+  return [...groups.entries()]
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([side, items]) => ({
+      key: side,
+      title: side,
+      items: items.sort((a, b) => a.regionName.localeCompare(b.regionName)),
+    }));
+}

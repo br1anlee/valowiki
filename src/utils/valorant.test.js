@@ -3,6 +3,8 @@ import {
   groupWeaponsByCategory,
   playableMaps,
   mapSlug,
+  calloutPosition,
+  calloutsBySide,
 } from "./valorant";
 
 const agent = (displayName, role) => ({
@@ -104,5 +106,57 @@ describe("mapSlug", () => {
     expect(mapSlug("The Range")).toBe("the-range");
     expect(mapSlug("Split")).toBe("split");
     expect(mapSlug("")).toBe("");
+  });
+});
+
+describe("calloutPosition", () => {
+  // Ascent's real transform from the API.
+  const ascent = {
+    xMultiplier: 7e-5,
+    yMultiplier: -7e-5,
+    xScalarToAdd: 0.813895,
+    yScalarToAdd: 0.573242,
+  };
+
+  test("projects game coordinates into 0-1 image space", () => {
+    // A Site on Ascent.
+    const { left, top } = calloutPosition(ascent, {
+      location: { x: 6154, y: -6626 },
+    });
+
+    expect(left).toBeGreaterThan(0);
+    expect(left).toBeLessThan(1);
+    expect(top).toBeGreaterThan(0);
+    expect(top).toBeLessThan(1);
+  });
+
+  test("the two spawns land at opposite ends of the map", () => {
+    const attacker = calloutPosition(ascent, { location: { x: 60, y: 50 } });
+    const defender = calloutPosition(ascent, {
+      location: { x: 1982, y: -9738 },
+    });
+
+    expect(attacker.left).toBeGreaterThan(defender.left);
+  });
+});
+
+describe("calloutsBySide", () => {
+  const map = {
+    callouts: [
+      { regionName: "Main", superRegionName: "B" },
+      { regionName: "Site", superRegionName: "A" },
+      { regionName: "Lobby", superRegionName: "A" },
+    ],
+  };
+
+  test("groups by super-region, alphabetically", () => {
+    const groups = calloutsBySide(map);
+    expect(groups.map((g) => g.title)).toEqual(["A", "B"]);
+    expect(groups[0].items.map((c) => c.regionName)).toEqual(["Lobby", "Site"]);
+  });
+
+  test("tolerates a map with no callouts", () => {
+    expect(calloutsBySide({})).toEqual([]);
+    expect(calloutsBySide()).toEqual([]);
   });
 });

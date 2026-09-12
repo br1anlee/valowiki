@@ -4,6 +4,13 @@
    Design tokens
    ========================================================================== */
 :root {
+  /* Data-visualisation series. These are the dataviz default categorical
+     slots 1 and 2, stepped for a dark surface, and validated against
+     --surface (#1a242d): CVD dE 26.8, normal-vision dE 31.8, contrast >= 3:1.
+     Kept distinct from --val-red so brand accent never reads as a series. */
+  --series-1: #3987e5;
+  --series-2: #d95926;
+
   /* Brand */
   --val-red: #ff4655;
   --val-red-dark: #d13343;
@@ -114,6 +121,31 @@ code {
 }
 ::-webkit-scrollbar-thumb:hover { background: var(--val-red); }
 
+/* Visible only once focused, so keyboard users can bypass the sidebar. */
+.skip-link {
+  position: fixed;
+  top: var(--space-3);
+  left: var(--space-3);
+  z-index: 300;
+  padding: var(--space-3) var(--space-6);
+  background: var(--val-red);
+  color: #fff;
+  border-radius: var(--radius);
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  transform: translateY(-200%);
+  transition: transform var(--ease);
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+  color: #fff;
+}
+
+/* The skip target shouldn't draw a focus ring when moved to programmatically. */
+.app-main:focus { outline: none; }
+
 /* ==========================================================================
    App shell: content sits to the right of the fixed sidebar
    ========================================================================== */
@@ -198,6 +230,36 @@ code {
   background: var(--val-red-dark);
   border-color: var(--val-red-dark);
   color: #fff;
+}
+
+/* A low-emphasis, repeatable action sitting under a grid - so it borrows the
+   red-on-tinted-surface language of the tags and site badges rather than the
+   off-white of .btn, which reads as unstyled across a wide empty row. */
+.btn-more {
+  background: rgba(255, 70, 85, 0.08);
+  border-color: rgba(255, 70, 85, 0.45);
+  color: var(--val-red);
+}
+
+.btn-more:hover {
+  background: var(--val-red);
+  border-color: var(--val-red);
+  color: #fff;
+}
+
+/* Wrapper for a "Load more" control and its remaining-count caption. Shared by
+   the bundle list and the weapon skin grid. */
+.load-more {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  margin-top: var(--space-12);
+}
+
+.load-more span {
+  font-size: 0.78rem;
+  color: var(--text-dim);
 }
 
 /* ==========================================================================

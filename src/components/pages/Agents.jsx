@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import "../layout/Agent.css";
 import { groupAgentsByRole } from "../../utils/valorant";
+import DataState, { SkeletonGrid } from "../layout/DataState";
 
 // Editorial copy keyed by the API's role name. A role with no entry still
 // renders its card, just without a blurb, so a new role can't break the page.
@@ -16,7 +17,7 @@ const ROLE_COPY = {
     "Controllers slice up dangerous territory to set their team up for success. Smokes, slows and stuns block off a defender's vision and carve safe paths through a site.",
 };
 
-export default function Agents({ agents }) {
+export default function Agents({ agents, status, onRetry }) {
   const [query, setQuery] = useState("");
   const [activeRole, setActiveRole] = useState("All");
 
@@ -54,11 +55,21 @@ export default function Agents({ agents }) {
         <div className="agents-hero-overlay">
           <span className="eyebrow">Valowiki</span>
           <h1>Agents</h1>
-          <p>{agents.length} playable agents across {roleGroups.length} roles</p>
+          <p>
+            {status === "ready"
+              ? `${agents.length} playable agents across ${roleGroups.length} roles`
+              : "Every playable agent, grouped by role"}
+          </p>
         </div>
       </header>
 
       <div className="page">
+        <DataState
+          status={status}
+          onRetry={onRetry}
+          what="agents"
+          skeleton={<SkeletonGrid count={12} />}
+        >
         <h2 className="section-title">Roles</h2>
         <div className="role-grid">
           {roleGroups.map((group) => (
@@ -111,7 +122,7 @@ export default function Agents({ agents }) {
               </button>
             ))}
           </div>
-          <span className="result-count">
+          <span className="result-count" role="status" aria-live="polite">
             {visibleAgents.length} of {agents.length}
           </span>
         </div>
@@ -139,6 +150,7 @@ export default function Agents({ agents }) {
             ))}
           </div>
         )}
+        </DataState>
       </div>
     </>
   );

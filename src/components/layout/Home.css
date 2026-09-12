@@ -24,6 +24,7 @@
 }
 
 .hero-video {
+  background: var(--surface);
   position: absolute;
   inset: 0;
   width: 100%;
