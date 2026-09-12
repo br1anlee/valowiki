@@ -55,11 +55,21 @@ export default function Agents({ agents, status, onRetry }) {
         <div className="agents-hero-overlay">
           <span className="eyebrow">Valowiki</span>
           <h1>Agents</h1>
-          <p>{agents.length} playable agents across {roleGroups.length} roles</p>
+          <p>
+            {status === "ready"
+              ? `${agents.length} playable agents across ${roleGroups.length} roles`
+              : "Every playable agent, grouped by role"}
+          </p>
         </div>
       </header>
 
       <div className="page">
+        <DataState
+          status={status}
+          onRetry={onRetry}
+          what="agents"
+          skeleton={<SkeletonGrid count={12} />}
+        >
         <h2 className="section-title">Roles</h2>
         <div className="role-grid">
           {roleGroups.map((group) => (
@@ -117,17 +127,11 @@ export default function Agents({ agents, status, onRetry }) {
           </span>
         </div>
 
-        <DataState
-          status={status}
-          onRetry={onRetry}
-          what="agents"
-          skeleton={<SkeletonGrid count={12} />}
-        >
-          {visibleAgents.length === 0 ? (
-            <p className="empty-state">No agents match that search.</p>
-          ) : (
-            <div className="agent-grid">
-              {visibleAgents.map((agent) => (
+        {visibleAgents.length === 0 ? (
+          <p className="empty-state">No agents match that search.</p>
+        ) : (
+          <div className="agent-grid">
+            {visibleAgents.map((agent) => (
               <Link
                 key={agent.uuid}
                 to={`/agents/${agent.uuid}`}
@@ -143,9 +147,9 @@ export default function Agents({ agents, status, onRetry }) {
                   </span>
                 </div>
               </Link>
-              ))}
-            </div>
-          )}
+            ))}
+          </div>
+        )}
         </DataState>
       </div>
     </>

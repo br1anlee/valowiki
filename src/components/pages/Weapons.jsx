@@ -44,9 +44,19 @@ export default function Weapons({ weapons, status, onRetry }) {
       <header className="page-head">
         <span className="eyebrow">Valowiki</span>
         <h1>Weapons</h1>
-        <p>{weapons.length} weapons across {categories.length} categories</p>
+        <p>
+          {status === "ready"
+            ? `${weapons.length} weapons across ${categories.length} categories`
+            : "Every weapon, grouped by shop category"}
+        </p>
       </header>
 
+      <DataState
+        status={status}
+        onRetry={onRetry}
+        what="weapons"
+        skeleton={<SkeletonGrid count={8} variant="wide" />}
+      >
       <div className="filter-bar">
         <input
           type="search"
@@ -83,13 +93,7 @@ export default function Weapons({ weapons, status, onRetry }) {
         </span>
       </div>
 
-      <DataState
-        status={status}
-        onRetry={onRetry}
-        what="weapons"
-        skeleton={<SkeletonGrid count={8} variant="wide" />}
-      >
-        {visibleCategories.length === 0 ? (
+      {visibleCategories.length === 0 ? (
           <p className="empty-state">No weapons match that search.</p>
         ) : (
           visibleCategories.map((group) => (
@@ -117,9 +121,9 @@ export default function Weapons({ weapons, status, onRetry }) {
                 </Link>
               ))}
             </div>
-            </section>
-          ))
-        )}
+          </section>
+        ))
+      )}
       </DataState>
     </div>
   );

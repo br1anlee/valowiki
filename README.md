@@ -11,43 +11,72 @@ Built with React and React Router. No backend.
 ## Screenshots
 
 ### Home
-![Home page with video hero and section cards](./docs/screenshots/home.jpg)
+![Home page with a video hero and cards linking to agents, maps and weapons](./docs/screenshots/home.jpg)
 
 ### Agents
 Live search and role filters over the full roster. Counts update as Riot adds agents.
 
-![Agents listing with search box, role filter chips and a grid of agent cards](./docs/screenshots/agents.jpg)
+![Agents listing with a search box, role filter chips and a grid of agent cards](./docs/screenshots/agents.jpg)
 
-### Agent detail
-![Jett's detail page showing role badge, portrait and ability cards](./docs/screenshots/agent-detail.jpg)
+| Filtered to duelists | Agent detail |
+|---|---|
+| ![Agents grid filtered to the eight duelists](./docs/screenshots/agents-filtered.jpg) | ![Jett's page with role badge, portrait and ability cards](./docs/screenshots/agent-detail.jpg) |
 
 ### Maps
-![Maps page showing a grid of map cards with splash art and site badges](./docs/screenshots/maps.jpg)
+![Maps page with a card per map in the standard rotation](./docs/screenshots/maps.jpg)
+
+Every callout plotted on the minimap, from the coordinate transform the API ships per map:
+
+![Ascent minimap with all 22 callouts plotted and an index grouped by side](./docs/screenshots/map-callouts.jpg)
 
 ### Weapons
-![Weapons page grouped by shop category with prices in creds](./docs/screenshots/weapons.jpg)
+| Listing | Detail |
+|---|---|
+| ![Weapons grouped by shop category with prices in creds](./docs/screenshots/weapons.jpg) | ![Vandal page with a uniform art box and a stat strip](./docs/screenshots/weapon-detail.jpg) |
 
 ### Weapon comparison
-Shots and time to kill computed from the game's damage tables, with a falloff chart.
+Shots and time to kill computed from the game's damage tables, for any two weapons.
 
-![Weapon comparison showing shots and time to kill for two weapons side by side](./docs/screenshots/compare.jpg)
+![Comparison table showing damage, shots and time to kill by range](./docs/screenshots/compare.jpg)
 
-### Map callouts
-Every callout plotted on the minimap from the coordinate transform the API ships per map.
+The falloff chart makes the Vandal/Phantom tradeoff visible - the Phantom steps down at 20 m, the Vandal holds flat:
 
-![Ascent minimap with all callouts plotted and an index grouped by side](./docs/screenshots/map-callouts.jpg)
+![Damage falloff chart with a flat Vandal line and a stepped Phantom line](./docs/screenshots/compare-chart.jpg)
 
 ### Line ups
-Video thumbnails with map tags and a lightbox player. Filter by map.
+Thumbnails with map tags; the player only loads when a card is opened.
 
-![Sova line ups with map filter chips and video thumbnail cards](./docs/screenshots/lineups.jpg)
+| Gallery | Player |
+|---|---|
+| ![Sova line ups with map filter chips and thumbnail cards](./docs/screenshots/lineups.jpg) | ![A line-up video open in a lightbox with its map tag](./docs/screenshots/lineup-lightbox.jpg) |
+
+### Loading and failure
+The listing pages show skeletons while the API is in flight, and a retryable error if it fails - never an empty grid claiming there are no results.
+
+| Loading | API unavailable |
+|---|---|
+| ![Skeleton placeholder cards while agent data loads](./docs/screenshots/loading-state.jpg) | ![An error panel reading "Couldn't load agents" with a Try again button](./docs/screenshots/error-state.jpg) |
 
 ### Mobile
 The sidebar collapses to a drawer below 900px.
 
-| Navigation drawer | Agents |
-|---|---|
-| ![Mobile navigation drawer open over the agents page](./docs/screenshots/mobile-nav.jpg) | ![Agents page on a phone-width screen](./docs/screenshots/mobile-agents.jpg) |
+| Navigation | Agents | Weapon detail |
+|---|---|---|
+| ![Mobile navigation drawer open](./docs/screenshots/mobile-nav.jpg) | ![Agents page at phone width](./docs/screenshots/mobile-agents.jpg) | ![Weapon detail at phone width with a two-column stat grid](./docs/screenshots/mobile-weapon.jpg) |
+
+<details>
+<summary>More screens</summary>
+
+### Team
+![Team page with a card per contributor](./docs/screenshots/team.jpg)
+
+### Gameplay
+![Gameplay clips in the same thumbnail gallery](./docs/screenshots/gameplay.jpg)
+
+### Not found
+![404 page with a Jett animation and a link home](./docs/screenshots/not-found.jpg)
+
+</details>
 
 ---
 
