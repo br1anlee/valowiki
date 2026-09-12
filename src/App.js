@@ -21,6 +21,7 @@ import BundleDetail from './components/pages/BundleDetail';
 import Weapon from './components/pages/Weapon';
 import Lineups from './components/pages/Lineups';
 import AgentLineups from './components/pages/AgentLineups';
+import AgentMapLineups from './components/pages/AgentMapLineups';
 import Contact from './components/pages/Contact';
 import Gameplay from './components/pages/Gameplay';
 import PageNotFound from './components/pages/PageNotFound';
@@ -97,6 +98,7 @@ function App() {
           <Route path='/bundles/:id' element={<BundleDetail weapons={weapons} {...data} />} />
           <Route path='/lineups' element={<Lineups />} />
           <Route path='/lineups/:agent' element={<AgentLineups />} />
+          <Route path='/lineups/:agent/:map' element={<AgentMapLineups />} />
           <Route path='/team' element={<Contact />} />
           <Route path='/gameplay' element={<Gameplay />} />
           <Route path='*' element={<PageNotFound />} />

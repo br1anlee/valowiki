@@ -62,11 +62,12 @@ tier, sort, and page through 24 at a time.
 | ![Grid of skin bundles with promo art and skin counts](./docs/screenshots/bundles.jpg) | ![The Glitchpop bundle with its five skins and Exclusive Edition tiers](./docs/screenshots/bundle-detail.jpg) |
 
 ### Line ups
-Thumbnails with map tags; the player only loads when a card is opened.
+Organised agent x map - "I am Sova on Ascent" - leading with what your job is
+there, then the line ups that prove it.
 
-| Gallery | Player |
+| Pick a map | Agent x map |
 |---|---|
-| ![Sova line ups with map filter chips and thumbnail cards](./docs/screenshots/lineups.jpg) | ![A line-up video open in a lightbox with its map tag](./docs/screenshots/lineup-lightbox.jpg) |
+| ![Sova's page listing the maps he has line ups for](./docs/screenshots/lineups.jpg) | ![Sova on Ascent, with a role brief and expandable line ups](./docs/screenshots/lineup-agent-map.jpg) |
 
 ### Loading and failure
 The listing pages show skeletons while the API is in flight, and a retryable error if it fails - never an empty grid claiming there are no results.
@@ -118,7 +119,8 @@ The app runs at `http://localhost:3000`. No API key or `.env` is needed — the 
 | `npm start` | Dev server with hot reload |
 | `npm run build` | Production build into `build/` |
 | `npm test` | Unit tests for the data and ballistics helpers |
-| `node scripts/fetch-lineup-titles.mjs` | Pull real line-up titles from YouTube (see below) |
+| `npm run lineups:titles` | Pull real line-up titles from YouTube (see below) |
+| `npm run lineups:gaps` | Report which line ups are still undocumented |
 
 ---
 
@@ -138,7 +140,8 @@ The app runs at `http://localhost:3000`. No API key or `.env` is needed — the 
 | `/bundles` | Skin collections, searchable by bundle or skin name |
 | `/bundles/:id` | Every skin in one collection, with rarity tiers |
 | `/lineups` | Line-up overview |
-| `/lineups/:agent` | Line-up videos for one agent |
+| `/lineups/:agent` | Which maps an agent has line ups for |
+| `/lineups/:agent/:map` | Role brief plus that agent's line ups on that map |
 | `/gameplay` | Gameplay clips |
 | `/team` | About the team |
 | `*` | 404 |
@@ -271,7 +274,8 @@ src/
     ├── layout/                 # Sidebar, Footer, LineupGallery + CSS
     └── pages/                  # one component per route
 scripts/
-└── fetch-lineup-titles.mjs     # populates line-up titles from YouTube
+├── fetch-lineup-titles.mjs     # populates line-up titles from YouTube
+└── lineup-gaps.mjs             # reports undocumented line ups
 .github/workflows/
 ├── ci.yml                      # tests + build on every push and PR
 └── deploy.yml                  # publishes to GitHub Pages

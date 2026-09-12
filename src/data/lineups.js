@@ -1,20 +1,32 @@
-// Line-up catalogue.
+// Line-up catalogue, organised agent x map.
 //
-// Adding a line up means adding one entry here - no new component, route or
-// sidebar edit. `map`, `ability` and `title` are optional: the gallery falls
-// back gracefully when they are missing, so an entry is useful the moment you
-// know its video id.
+// The unit a player thinks in is "I am Sova on Ascent" - not "Sova", and not
+// "Ascent" - so that pair is what the pages are built around.
 //
-// To fill in the titles automatically once the videos are public, run:
+// Only `id`, `agent` and `map` are required. Everything else renders when it
+// is filled in and is simply absent when it is not, so an entry is useful the
+// moment you know its video id and improves as you document it.
+// `npm run lineups:gaps` prints what is still blank.
+//
+// The teaching fields are the point of the site - they are what the big
+// line-up databases leave out:
+//
+//   denies    what this takes from the enemy, or gives your team
+//   when      the moment in the round it is worth spending
+//   beatenBy  how a good opponent answers it
+//   priority  1, 2, 3 - the order a new player should learn them in
+//   images    stand / aim / result screenshots, which beat video for studying
+//
+// To fill titles in automatically from YouTube, run:
 //   node scripts/fetch-lineup-titles.mjs
-// It reads each video's real title from YouTube's public oEmbed endpoint.
 
-import { asset } from "../utils/asset";
+import { asset } from "../utils/asset.js";
 
 export const LINEUP_AGENTS = [
   {
     slug: "sova",
     name: "Sova",
+    role: "Initiator",
     banner: asset("images/sovapic.jpeg"),
     blurb:
       "Recon Bolts and Shock Darts that clear a site before your team steps onto it.",
@@ -22,36 +34,80 @@ export const LINEUP_AGENTS = [
   {
     slug: "cypher",
     name: "Cypher",
+    role: "Sentinel",
     banner: asset("images/cypher.jpeg"),
     blurb:
       "Cages and trapwires that lock down flanks and buy your team information.",
   },
 ];
 
+// "How am I useful on this map?" - the question the line ups are evidence for.
+// One entry per agent x map; blank strings render as "not written yet".
+export const MAP_ROLES = [
+  { agent: "sova", map: "Ascent", attack: "", defence: "" },
+  { agent: "sova", map: "Haven", attack: "", defence: "" },
+  { agent: "cypher", map: "Split", attack: "", defence: "" },
+  { agent: "cypher", map: "Bind", attack: "", defence: "" },
+  { agent: "cypher", map: "Fracture", attack: "", defence: "" },
+];
+
+// A worked example of a filled-in entry. Nothing here is live - it shows the
+// shape, and what the teaching fields are for. The tactical claims are yours to
+// write; the site is only worth more than a video list if they are right.
+//
+//   {
+//     id: "youtubeId",
+//     agent: "sova",
+//     map: "Ascent",
+//     title: "A Main to A Site",
+//     ability: "Recon Bolt",
+//     side: "Attack",          // or "Defence"
+//     difficulty: "Easy",      // Easy | Medium | Hard
+//     priority: 1,             // 1 = teach this one first
+//
+//     denies:   "Clears the two most common A Site hiding spots before your
+//                team walks in, so the entry fragger knows where to look.",
+//     when:     "Right after the round starts, before anyone commits to A.",
+//     beatenBy: "It can be shot down - a defender watching the bolt will
+//                destroy it before the second scan.",
+//
+//     images: {
+//       stand:  asset("images/lineups/sova-ascent-a-stand.jpg"),
+//       aim:    asset("images/lineups/sova-ascent-a-aim.jpg"),
+//       result: asset("images/lineups/sova-ascent-a-result.jpg"),
+//     },
+//   }
+//
 export const LINEUPS = [
-  // --- Sova -----------------------------------------------------------------
-  { id: "Dm_AnZbeamE", title: "B Stairs To Mid", map: "Ascent", agent: "sova" },
-  { id: "7lR2_FfKqUk", title: "Hell to Heaven", map: "Ascent", agent: "sova" },
-  { id: "RCdzMhXYvn8", title: "CT to Boat", map: "Ascent", agent: "sova" },
-  { id: "Csqb_JKoOwo", title: "CT Spawn to A", map: "Ascent", agent: "sova" },
+  // --- Sova · Ascent --------------------------------------------------------
+  { id: "Dm_AnZbeamE", agent: "sova", map: "Ascent", title: "B Stairs To Mid" },
+  { id: "7lR2_FfKqUk", agent: "sova", map: "Ascent", title: "Hell to Heaven" },
+  { id: "RCdzMhXYvn8", agent: "sova", map: "Ascent", title: "CT to Boat" },
+  { id: "Csqb_JKoOwo", agent: "sova", map: "Ascent", title: "CT Spawn to A" },
+
+  // --- Sova · Haven ---------------------------------------------------------
   {
     id: "TR_OlrD8e_4",
     agent: "sova",
-    title: "Garage Recon",
     map: "Haven",
+    title: "Garage Recon",
     ability: "Recon Bolt",
   },
-  { id: "K9p7Hu9zSWU", title: "T Spawn To Garage", map: "Haven", agent: "sova" },
-  { id: "bY5wwODz3S4", title: "C Main to C Site", map: "Haven", agent: "sova" },
-  { id: "ENo5rg6PLmg", title: "B Link to A", map: "Haven", agent: "sova" },
+  { id: "K9p7Hu9zSWU", agent: "sova", map: "Haven", title: "T Spawn To Garage" },
+  { id: "bY5wwODz3S4", agent: "sova", map: "Haven", title: "C Main to C Site" },
+  { id: "ENo5rg6PLmg", agent: "sova", map: "Haven", title: "B Link to A" },
 
-  // --- Cypher ---------------------------------------------------------------
-  { id: "_kgwebcpdxw", title: "B Setup", map: "Split", agent: "cypher" },
-  { id: "FCCmm8oKYWg", title: "A Setup", map: "Split", agent: "cypher" },
-  { id: "k4vnsdNBEu8", title: "B Setup", map: "Bind", agent: "cypher" },
-  { id: "jHMsLL9HgOY", title: "A Setup", map: "Bind", agent: "cypher" },
-  { id: "TFteb9A_63c", title: "B Setup", map: "Fracture", agent: "cypher" },
-  { id: "4xppZMixd0s", title: "A Setup", map: "Fracture", agent: "cypher" },
+  // --- Cypher · Split -------------------------------------------------------
+  { id: "_kgwebcpdxw", agent: "cypher", map: "Split", title: "B Setup" },
+  { id: "FCCmm8oKYWg", agent: "cypher", map: "Split", title: "A Setup" },
+
+  // --- Cypher · Bind --------------------------------------------------------
+  { id: "k4vnsdNBEu8", agent: "cypher", map: "Bind", title: "B Setup" },
+  { id: "jHMsLL9HgOY", agent: "cypher", map: "Bind", title: "A Setup" },
+
+  // --- Cypher · Fracture ----------------------------------------------------
+  { id: "TFteb9A_63c", agent: "cypher", map: "Fracture", title: "B Setup" },
+  { id: "4xppZMixd0s", agent: "cypher", map: "Fracture", title: "A Setup" },
 ];
 
 // Standalone gameplay clips - same card treatment, no agent grouping.
@@ -68,15 +124,55 @@ export const getAgent = (slug) =>
 export const lineupsFor = (slug) =>
   LINEUPS.filter((lineup) => lineup.agent === slug);
 
-// Maps present in a set of line ups, for the filter chips. Entries with no map
-// yet are ignored here but still render in the grid.
-export const mapsIn = (lineups) =>
-  [...new Set(lineups.map((l) => l.map).filter(Boolean))].sort((a, b) =>
-    a.localeCompare(b)
-  );
+// Maps an agent has line ups for, each with its count, in alphabetical order.
+export function mapsFor(slug) {
+  const counts = new Map();
+
+  lineupsFor(slug).forEach((lineup) => {
+    counts.set(lineup.map, (counts.get(lineup.map) || 0) + 1);
+  });
+
+  return [...counts.entries()]
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([map, count]) => ({ map, count }));
+}
+
+// The agent x map page: line ups in the order a new player should learn them,
+// with anything unprioritised after the ordered ones.
+export function lineupsOn(slug, map) {
+  return lineupsFor(slug)
+    .filter((lineup) => lineup.map?.toLowerCase() === String(map).toLowerCase())
+    .sort((a, b) => {
+      const order = (l) => (typeof l.priority === "number" ? l.priority : Infinity);
+      return order(a) - order(b) || (a.title || "").localeCompare(b.title || "");
+    });
+}
+
+export const roleOn = (slug, map) =>
+  MAP_ROLES.find(
+    (entry) =>
+      entry.agent === slug &&
+      entry.map.toLowerCase() === String(map).toLowerCase()
+  ) || null;
+
+// Which teaching fields an entry is still missing - drives the gaps script and
+// the "help finish this" note on the page.
+export const TEACHING_FIELDS = ["ability", "side", "difficulty", "denies", "when", "beatenBy"];
+
+export const missingFields = (lineup) =>
+  TEACHING_FIELDS.filter((field) => {
+    const value = lineup[field];
+    return value === undefined || value === null || value === "";
+  });
 
 // hqdefault exists for every public video; maxres does not.
 export const thumbnailFor = (id) =>
   `https://img.youtube.com/vi/${id}/hqdefault.jpg`;
 
 export const watchUrl = (id) => `https://www.youtube.com/watch?v=${id}`;
+
+// Maps present in a set of line ups, for the filter chips.
+export const mapsIn = (lineups) =>
+  [...new Set(lineups.map((l) => l.map).filter(Boolean))].sort((a, b) =>
+    a.localeCompare(b)
+  );

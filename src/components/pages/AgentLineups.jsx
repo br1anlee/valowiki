@@ -1,29 +1,52 @@
-import { Navigate, useParams } from "react-router-dom";
-import LineupGallery from "../layout/LineupGallery";
+import { Link, Navigate, useParams } from "react-router-dom";
 import "../layout/Lineup-page.css";
-import { getAgent, lineupsFor } from "../../data/lineups";
+import { getAgent, lineupsFor, mapsFor } from "../../data/lineups";
 
-// Serves /lineups/sova, /lineups/cypher and any agent added to the data file.
+// The agent's overview: which maps they have line ups for. Picking one leads
+// to the agent x map page, which is where the actual teaching happens.
 export default function AgentLineups() {
   const { agent: slug } = useParams();
   const agent = getAgent(slug);
 
-  // Unknown agent falls through to the 404 page.
   if (!agent) return <Navigate to="/nonexistent" replace />;
 
-  const lineups = lineupsFor(slug);
+  const maps = mapsFor(slug);
+  const total = lineupsFor(slug).length;
 
   return (
     <div className="page">
       <img className="image-gif" src={agent.banner} alt={agent.name} />
 
       <header className="page-head">
-        <span className="eyebrow">Line Ups</span>
+        <span className="eyebrow">
+          <Link to="/lineups">Line Ups</Link> · {agent.role}
+        </span>
         <h1>{agent.name}</h1>
         <p>{agent.blurb}</p>
       </header>
 
-      <LineupGallery lineups={lineups} label={agent.name} />
+      <h2 className="section-title">
+        Pick your map <small>{total} line ups</small>
+      </h2>
+
+      {maps.length === 0 ? (
+        <p className="empty-state">No line ups for {agent.name} yet.</p>
+      ) : (
+        <div className="map-picker">
+          {maps.map((entry) => (
+            <Link
+              key={entry.map}
+              to={`/lineups/${slug}/${entry.map.toLowerCase()}`}
+              className="card"
+            >
+              <h3>{entry.map}</h3>
+              <span>
+                {entry.count} {entry.count === 1 ? "line up" : "line ups"}
+              </span>
+            </Link>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

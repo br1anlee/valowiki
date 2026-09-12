@@ -16,7 +16,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "lineups:gaps": "node scripts/lineup-gaps.mjs",
+    "lineups:titles": "node scripts/fetch-lineup-titles.mjs"
   },
   "eslintConfig": {
     "extends": [
