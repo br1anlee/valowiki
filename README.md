@@ -1,142 +1,159 @@
 # Valowiki
 
-An application that allows people to learn more in depth about their favorite Valorant agents while also becoming better players at the same time. The app showcases agents, maps, and some tips and tricks as well. 
+A Valorant companion app for players who want to learn their agents and improve their game. Agents, maps and weapons are pulled live from the [Valorant API](https://dash.valorant-api.com/), so the roster never goes stale — new agents and maps appear automatically as Riot ships them.
 
-## Deployment Link
-[Valowiki](https://valowiki.herokuapp.com/)
+Built with React and React Router. No backend.
 
-## Installation Instructions
-- Fork and clone the code and run `npm i` 
-  <details>
-    <summary> NPM </summary>
+> **Not affiliated with Riot Games.** All characters, art and assets belong to Riot Games.
 
-    - axios
-    - react
-    - react-dom
-    - react-icons
-    - react-player
-    - react-router-dom
+---
 
-  </details>
+## Screenshots
 
-## Planning Tools
-* Figma
-* Trello
+### Home
+![Home page with video hero and section cards](./docs/screenshots/home.jpg)
 
-## Tech Used
-* React
-* Axios
-* CSS
+### Agents
+Live search and role filters over the full roster. Counts update as Riot adds agents.
 
-## Routes
-| **HTTP Verb**| **URL** |  **Action**| **Description**
-|------------|-------------|------------|------------|
-| GET        | /      | Index (read)  | Homepage
-| GET         | /agents       |  Show (read) |  List of all Agents
-| GET     | /agents/:id |  Show (read)    | Details pages for specific agent
-| GET     | /lineups | Show (read) | Display agent lineups
-| GET     | /maps | Show (read)    | List of all maps
-| GET         | /maps/:id      | Show (read) |  Details pages for specific maps
-| GET     | /weapons | Show (read)    | List of all weapons organized by category
-| GET         | /weapons/:id      | Show (read) |  Detail page for a single weapon and showcase of skins
+![Agents listing with search box, role filter chips and a grid of agent cards](./docs/screenshots/agents.jpg)
 
-## Wireframes / Planning
+### Agent detail
+![Jett's detail page showing role badge, portrait and ability cards](./docs/screenshots/agent-detail.jpg)
 
-<details>
-    <summary>Initial Planning</summary>
+### Maps
+![Maps page showing a grid of map cards with splash art and site badges](./docs/screenshots/maps.jpg)
 
-![Home](./public/images/home.png)
+### Weapons
+![Weapons page grouped by shop category with prices in creds](./docs/screenshots/weapons.jpg)
 
-![Agent-List](./public/images/agent-list.png)
+### Line ups
+Video thumbnails with map tags and a lightbox player. Filter by map.
 
-![Sova](./public/images/sova.png)
+![Sova line ups with map filter chips and video thumbnail cards](./docs/screenshots/lineups.jpg)
 
-![Brimstone](./public/images/brimstone.png)
+### Mobile
+The sidebar collapses to a drawer below 900px.
 
-![Viper](./public/images/viper.png)
+| Navigation drawer | Agents |
+|---|---|
+| ![Mobile navigation drawer open over the agents page](./docs/screenshots/mobile-nav.jpg) | ![Agents page on a phone-width screen](./docs/screenshots/mobile-agents.jpg) |
 
-![Sova lineup](./public/images/lineups.png)
+---
 
-</details>
+## Running locally
 
-## Final Design
+Requires Node 18 or newer (verified on Node 26).
 
-<details>
-    <summary>Screenshots</summary>
-
-![Home](./public/images/final/homepage.jpg)
-
-![Agent-List](./public/images/final/agents.jpg)
-
-![Jett](./public/images/final/jett.jpg)
-
-![Maps](./public/images/final/maps.jpg)
-
-![Icebox](./public/images/final/icebox.jpg)
-
-![Sova lineup](./public/images/final/lineups.png)
-
-</details>
-
-## MVP
-- [X] Homepage that shows a description of the game / app 
-- [X] Navbar that directs to agents + maps
-- [X] List of agents on agents page 
-- [X] Detailed information about certain agents on their specific page
-- [X] Maps page showcasing different maps / callouts
-
-## Stretch Goals
-- [] Details page for all Agents
-- [] Details page for all maps
-- [X] Weapons skins tab that showcases all the various weapon skins
-
-## Code Highlights
-```javascript
-export default function Weapons({ weapons }) {
-   const categories = new Map()
-
-   for (let index = 0; index < weapons.length; index++) {
-      const oneWeapon = weapons[index]
-
-      if (!categories.has(oneWeapon.category)) {
-         categories.set(oneWeapon.category, [])
-      }
-      categories.get(oneWeapon.category).push(oneWeapon)
-   }
-
-   const weaponsList = []
-   for (const arrayOfWeapons of categories.values()) {
-      const displayName = arrayOfWeapons[0].shopData?.category || "Melee"
-      weaponsList.push(<h2 className="center weapons-h2">{displayName}</h2>)
-
-      const weaponsGroup = arrayOfWeapons.map((weapon, idx) => {
-         return (
-            <div key={`weapon-${idx}`}>
-               <h3>{weapon.displayName}</h3>
-               <p>
-                  <br></br>
-                  <Link to={`/weapons/${weapon.uuid}`}>
-                     <img className="weapons-img" src={weapon.displayIcon} alt={weapon.displayName} />
-                  </Link>
-               </p>
-            </div>
-         )
-      })
-      weaponsList.push(<div className="weapons-container">{weaponsGroup}</div>)
-   }
-
-   return (
-      <>
-         <h1 className="center weapons-h1">List of Weapons</h1>
-         <div className="center weapons-div">{weaponsList}</div>
-      </>
-   )
-}
+```bash
+git clone https://github.com/br1anlee/valowiki.git
+cd valowiki
+npm install
+npm start
 ```
 
+The app runs at `http://localhost:3000`. No API key or `.env` is needed — the Valorant API is public and unauthenticated.
+
+### Scripts
+
+| Command | What it does |
+|---|---|
+| `npm start` | Dev server with hot reload |
+| `npm run build` | Production build into `build/` |
+| `npm test` | Unit tests for the data helpers |
+| `node scripts/fetch-lineup-titles.mjs` | Pull real line-up titles from YouTube (see below) |
+
+---
+
+## Routes
+
+| URL | Description |
+|---|---|
+| `/` | Home |
+| `/agents` | All agents, searchable and filterable by role |
+| `/agents/:id` | Agent detail with abilities |
+| `/maps` | Maps in the standard rotation |
+| `/maps#<map-slug>` | Jumps to a map's section, e.g. `/maps#icebox` |
+| `/weapons` | Weapons grouped by shop category |
+| `/weapons/:id` | Weapon stats and skins |
+| `/lineups` | Line-up overview |
+| `/lineups/:agent` | Line-up videos for one agent |
+| `/gameplay` | Gameplay clips |
+| `/team` | About the team |
+| `*` | 404 |
+
+Maps have no detail route, so the sidebar links to anchors on `/maps` instead.
+
+---
+
+## How it works
+
+### Everything is driven by the API
+
+There are no hardcoded agent or weapon lists. [`src/utils/valorant.js`](./src/utils/valorant.js) turns raw API payloads into the shapes the UI renders, and both the sidebar and the listing pages read from it — so they can't drift out of sync.
+
+Three things that endpoint needs handling for:
+
+- **`/maps` returns more than the maps you play.** Deathmatch arenas, the tutorial and *two* "The Range" entries all come back. Only standard maps carry a `tacticalDescription`, which is what `playableMaps()` filters on.
+- **Melee has no `shopData`.** It's the one weapon without a shop entry, so category grouping falls back to the equippable category and sorts it last.
+- **`shopOrderPriority` is `0` for every weapon**, so it can't order the shop. Weapons sort by cost instead, which matches the in-game buy menu.
+
+### Line ups are a data file
+
+Adding a line up is one entry in [`src/data/lineups.js`](./src/data/lineups.js) — no new component, route or sidebar edit:
+
+```js
+{ id: "TR_OlrD8e_4", agent: "sova", title: "Garage Recon", map: "Haven", ability: "Recon Bolt" }
+```
+
+`map` and `ability` are optional; the card renders whatever is present.
+
+To fill in titles automatically, make sure the videos are public and run:
+
+```bash
+node scripts/fetch-lineup-titles.mjs          # dry run, prints what it found
+node scripts/fetch-lineup-titles.mjs --write  # applies the changes
+```
+
+It reads each title from YouTube's public oEmbed endpoint (no API key) and parses a trailing `[MAP]` tag — `Sova CT to Boat [ASCENT]` becomes `title: "CT to Boat", map: "Ascent"`. Map names are validated against the live map list, so a typo can't create a bogus filter. Private or deleted videos are reported and left untouched.
+
+### Videos load as thumbnails, not players
+
+A line-up page mounts **zero** YouTube iframes on load — just thumbnails. Clicking a card opens a lightbox that mounts exactly one player. Eight embedded iframes previously loaded ~0.5 MB of YouTube payload before anyone pressed play.
+
+---
+
+## Project structure
+
+```
+src/
+├── App.js                      # routes + the three API fetches
+├── index.css                   # design tokens, reset, shared primitives
+├── data/lineups.js             # line-up catalogue
+├── utils/valorant.js           # API grouping, filtering, slugs
+└── components/
+    ├── layout/                 # Sidebar, Footer, LineupGallery + CSS
+    └── pages/                  # one component per route
+scripts/
+└── fetch-lineup-titles.mjs     # populates line-up titles from YouTube
+docs/screenshots/               # images used by this README
+```
+
+### Styling
+
+Plain CSS with custom properties. Tokens live at the top of [`src/index.css`](./src/index.css) — palette, spacing scale, radii, shadows, easing — alongside shared primitives (`.page`, `.card`, `.btn`, `.chip`, `.filter-bar`). Page-specific styles sit next to their components.
+
+---
+
+## Tech
+
+- **React 18** with **React Router 6**
+- **Axios** for API requests
+- **react-player** for YouTube embeds
+- **react-icons** for the team page
+- **Create React App** (`react-scripts` 5)
+
 ## Resources
-    
-- [API](https://dash.valorant-api.com/)
-- Youtube
-- Fontawesome
-- Riot Games (All characters and assets belong to Riot Games)
+
+- [Valorant API](https://dash.valorant-api.com/) — agent, map and weapon data
+- [Riot Games](https://playvalorant.com/) — all characters and assets

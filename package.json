@@ -1,5 +1,5 @@
 {
-  "name": "hello",
+  "name": "valowiki",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -38,5 +38,6 @@
   },
   "devDependencies": {
     "@testing-library/react": "^13.0.0-alpha.7"
-  }
+  },
+  "description": "A Valorant companion app for agents, maps, weapons and line ups."
 }

@@ -19,10 +19,10 @@ export default function WeaponDetails({ weaponData, weaponStats, weaponShop, wea
       <section className="center">
          <h1 className="wep-text">{weaponData.displayName}</h1>
 
-         <div class="single-container">
+         <div className="single-container">
             <img className="wep-image" src={weaponData.displayIcon} alt={weaponData.displayName} />
-            <div class="middle">
-               <div class="text">
+            <div className="middle">
+               <div className="text">
                   {weaponShop === null ? (
                      ""
                   ) : (
