@@ -16,6 +16,7 @@ import Agent from './components/pages/Agent';
 import Weapons from './components/pages/Weapons';
 import Compare from './components/pages/Compare';
 import Bundles from './components/pages/Bundles';
+import Search from './components/pages/Search';
 import BundleDetail from './components/pages/BundleDetail';
 import Weapon from './components/pages/Weapon';
 import Lineups from './components/pages/Lineups';
@@ -83,6 +84,7 @@ function App() {
       <main className="app-main" id="main" tabIndex={-1}>
         <Routes>
           <Route path='/' element={<Home />} />
+          <Route path='/search' element={<Search agents={agents} gameMaps={gameMaps} weapons={weapons} />} />
           <Route path='/maps' element={<Maps gameMaps={gameMaps} {...data} />} />
           <Route path='/maps/:id' element={<MapDetail gameMaps={gameMaps} {...data} />} />
           <Route path='/agents' element={<Agents agents={agents} {...data} />} />

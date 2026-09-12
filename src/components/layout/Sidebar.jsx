@@ -7,6 +7,7 @@ import {
   playableMaps,
 } from "../../utils/valorant";
 import { LINEUP_AGENTS } from "../../data/lineups";
+import SearchBox from "./SearchBox";
 
 // Driven by the line-up catalogue, so a new agent appears here automatically.
 const LINEUP_SECTION = {
@@ -111,6 +112,8 @@ export default function Sidebar({ agents = [], gameMaps = [], weapons = [] }) {
           <img src="/images/logo.png" alt="" />
           <span>Valowiki</span>
         </Link>
+
+        <SearchBox agents={agents} gameMaps={gameMaps} weapons={weapons} />
 
         <nav className="sidebar-nav" aria-label="Main">
           <ul>
