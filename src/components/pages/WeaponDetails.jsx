@@ -1,4 +1,8 @@
+import { useEffect, useState } from "react"
 import "../layout/Weapons.css"
+import LazyImage from "../layout/LazyImage"
+
+const SKIN_PAGE = 24
 
 // "EWallPenetrationDisplayType::Medium" -> "Medium"
 const enumLabel = (value) =>
@@ -34,17 +38,29 @@ export default function WeaponDetails({ weaponData, weaponStats, weaponShop, wea
       stats.push({ label: "Run speed", value: `${weaponStats.runSpeedMultiplier}x` })
    }
 
-   const skinList = (weaponSkins || []).map((skin, idx) => {
-      const render = skin.chromas?.[0]?.fullRender
-      if (!render) return null
+   // A weapon can carry 200 skins; rendering them all makes a 12,000px page
+   // and puts hundreds of images in the document. Show a screenful at a time.
+   const [shown, setShown] = useState(SKIN_PAGE)
 
-      return (
-         <div key={`skin-${idx}`}>
-            <h3>{skin.displayName}</h3>
-            <img src={render} alt={skin.displayName} className="weapon-skin-image" loading="lazy" />
-         </div>
-      )
-   })
+   const skins = (weaponSkins || []).filter((skin) => skin.chromas?.[0]?.fullRender)
+
+   // Reset when navigating between weapons.
+   useEffect(() => {
+      setShown(SKIN_PAGE)
+   }, [weaponData?.uuid])
+
+   const remaining = skins.length - shown
+
+   const skinList = skins.slice(0, shown).map((skin, idx) => (
+      <div key={skin.uuid || `skin-${idx}`}>
+         <h3>{skin.displayName}</h3>
+         <LazyImage
+            className="weapon-skin-frame"
+            src={skin.chromas[0].fullRender}
+            alt={skin.displayName}
+         />
+      </div>
+   ))
 
    return (
       <div className="page">
@@ -81,8 +97,23 @@ export default function WeaponDetails({ weaponData, weaponStats, weaponShop, wea
             )}
          </section>
 
-         <h2 className="section-title">Skins</h2>
+         <h2 className="section-title">
+            Skins {skins.length > 0 && <small>{skins.length}</small>}
+         </h2>
          <div className="skins-container">{skinList}</div>
+
+         {remaining > 0 && (
+            <div className="bundle-more">
+               <button
+                  type="button"
+                  className="btn"
+                  onClick={() => setShown((n) => n + SKIN_PAGE)}
+               >
+                  Load {Math.min(remaining, SKIN_PAGE)} more
+               </button>
+               <span>{remaining} remaining</span>
+            </div>
+         )}
       </div>
    )
 }

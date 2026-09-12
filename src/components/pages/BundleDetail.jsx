@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
 import "../layout/Bundles.css";
 import DataState, { SkeletonGrid } from "../layout/DataState";
+import LazyImage from "../layout/LazyImage";
 import useBundleMeta from "../../hooks/useBundleMeta";
 import { buildBundles, findBundle, tierLookup } from "../../utils/bundles";
 
@@ -73,9 +74,7 @@ export default function BundleDetail({ weapons, status: weaponStatus, onRetry })
                     // The tier stripe is decorative; the label below carries it.
                     style={tier ? { "--tier": tier.color } : undefined}
                   >
-                    <div className="bundle-skin-art">
-                      {item.image && <img src={item.image} alt="" loading="lazy" />}
-                    </div>
+                    <LazyImage className="bundle-skin-art" src={item.image} />
                     <div className="bundle-skin-body">
                       <h4>{item.displayName}</h4>
                       <span className="bundle-skin-weapon">{item.weapon}</span>

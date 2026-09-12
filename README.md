@@ -34,6 +34,8 @@ Every callout plotted on the minimap, from the coordinate transform the API ship
 |---|---|
 | ![Weapons grouped by shop category with prices in creds](./docs/screenshots/weapons.jpg) | ![Vandal page with a uniform art box and a stat strip](./docs/screenshots/weapon-detail.jpg) |
 
+![The Classic's skin grid, 24 at a time with a Load more button](./docs/screenshots/weapon-skins.jpg)
+
 ### Weapon comparison
 Shots and time to kill computed from the game's damage tables, for any two weapons.
 
@@ -44,7 +46,8 @@ The falloff chart makes the Vandal/Phantom tradeoff visible - the Phantom steps 
 ![Damage falloff chart with a flat Vandal line and a stepped Phantom line](./docs/screenshots/compare-chart.jpg)
 
 ### Skin bundles
-Skins grouped into the collections they shipped in, with rarity tiers.
+Skins grouped into the collections they shipped in. Filter by weapon or rarity
+tier, sort, and page through 24 at a time.
 
 | Collections | Inside one |
 |---|---|
@@ -177,6 +180,24 @@ Two wrinkles worth knowing:
 The skins themselves arrive inside the weapons payload the sidebar already
 fetches, so only the theme, bundle and tier metadata (~0.4 MB) is requested, and
 only when a bundle page is opened.
+
+### Big grids are paged, and images announce themselves
+
+Two grids are far larger than they look: 439 collections, and up to 200 skins on
+a single weapon. Rendering either in full built a page tens of thousands of
+pixels tall with hundreds of images in the document.
+
+Both now render 24 at a time behind a "Load more", which took the bundle page
+from 50,632px to 3,363px and the Classic's skin grid from 11,776px to 2,337px.
+Bundles also default to collections of more than one skin - 178 of the 439 hold
+a single one-off skin rather than the multi-weapon bundle people mean - and can
+be filtered by weapon or tier, or sorted A to Z.
+
+Art still comes from a CDN that averages ~600 ms an image, so
+[`LazyImage`](./src/components/layout/LazyImage.jsx) pairs the browser's own
+lazy loading with a shimmering frame and a fade-in. Lazy loading alone leaves a
+scrolled grid looking like a wall of empty boxes; the placeholder is what makes
+it read as loading rather than broken.
 
 ### Time to kill is computed, not looked up
 

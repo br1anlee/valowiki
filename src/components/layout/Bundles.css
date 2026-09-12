@@ -1,4 +1,32 @@
 /* --------------------------------------------------------------------------
+   Controls
+   -------------------------------------------------------------------------- */
+.bundle-controls {
+  display: grid;
+  grid-template-columns: minmax(220px, 2fr) repeat(2, minmax(150px, 1fr));
+  gap: var(--space-4);
+  align-items: end;
+  margin-bottom: var(--space-4);
+}
+
+.bundle-more {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  margin-top: var(--space-12);
+}
+
+.bundle-more span {
+  font-size: 0.78rem;
+  color: var(--text-dim);
+}
+
+@media (max-width: 700px) {
+  .bundle-controls { grid-template-columns: 1fr; }
+}
+
+/* --------------------------------------------------------------------------
    Bundle listing
    -------------------------------------------------------------------------- */
 .bundle-grid {
@@ -14,10 +42,10 @@
   color: inherit;
 }
 
-.bundle-card-art {
-  aspect-ratio: 16 / 9;
+.bundle-card-art { aspect-ratio: 16 / 9; }
+
+.bundle-card-art.is-loaded {
   background: linear-gradient(160deg, var(--surface-hi), var(--surface));
-  overflow: hidden;
 }
 
 .bundle-card-art img {
@@ -26,7 +54,6 @@
   /* Promo art is wide; skin renders that stand in for it are not. `contain`
      suits both without cropping a weapon in half. */
   object-fit: contain;
-  transition: transform var(--ease);
 }
 
 .bundle-card:hover .bundle-card-art img { transform: scale(1.04); }
@@ -100,6 +127,9 @@
   place-items: center;
   height: 120px;
   padding: var(--space-4);
+}
+
+.bundle-skin-art.is-loaded {
   background: linear-gradient(160deg, var(--surface-hi), var(--surface));
 }
 
@@ -107,7 +137,6 @@
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
-  transition: transform var(--ease);
 }
 
 .bundle-skin:hover .bundle-skin-art img { transform: scale(1.06); }
