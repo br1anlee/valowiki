@@ -192,19 +192,6 @@ export default function Sidebar({ agents = [], gameMaps = [], weapons = [] }) {
             <li className="sidebar-section">
               <div className="sidebar-row">
                 <Link
-                  to="/concept"
-                  className={`sidebar-link${
-                    pathname === "/concept" ? " is-active" : ""
-                  }`}
-                >
-                  Concept
-                </Link>
-              </div>
-            </li>
-
-            <li className="sidebar-section">
-              <div className="sidebar-row">
-                <Link
                   to="/team"
                   className={`sidebar-link${
                     pathname === "/team" ? " is-active" : ""

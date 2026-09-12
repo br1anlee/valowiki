@@ -19,7 +19,6 @@ import Lineups from './components/pages/Lineups';
 import AgentLineups from './components/pages/AgentLineups';
 import Contact from './components/pages/Contact';
 import Gameplay from './components/pages/Gameplay';
-import Concept from './components/pages/Concept';
 import PageNotFound from './components/pages/PageNotFound';
 
 const API = 'https://valorant-api.com/v1'
@@ -64,7 +63,6 @@ function App() {
           <Route path='/lineups/:agent' element={<AgentLineups />} />
           <Route path='/team' element={<Contact />} />
           <Route path='/gameplay' element={<Gameplay />} />
-          <Route path='/concept' element={<Concept />} />
           <Route path='*' element={<PageNotFound />} />
         </Routes>
 
