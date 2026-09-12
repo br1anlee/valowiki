@@ -43,6 +43,13 @@ The falloff chart makes the Vandal/Phantom tradeoff visible - the Phantom steps 
 
 ![Damage falloff chart with a flat Vandal line and a stepped Phantom line](./docs/screenshots/compare-chart.jpg)
 
+### Skin bundles
+Skins grouped into the collections they shipped in, with rarity tiers.
+
+| Collections | Inside one |
+|---|---|
+| ![Grid of skin bundles with promo art and skin counts](./docs/screenshots/bundles.jpg) | ![The Glitchpop bundle with its five skins and Exclusive Edition tiers](./docs/screenshots/bundle-detail.jpg) |
+
 ### Line ups
 Thumbnails with map tags; the player only loads when a card is opened.
 
@@ -116,6 +123,8 @@ The app runs at `http://localhost:3000`. No API key or `.env` is needed — the 
 | `/weapons` | Weapons grouped by shop category |
 | `/weapons/:id` | Weapon stats and skins |
 | `/compare` | Shots and time to kill for any two weapons |
+| `/bundles` | Skin collections, searchable by bundle or skin name |
+| `/bundles/:id` | Every skin in one collection, with rarity tiers |
 | `/lineups` | Line-up overview |
 | `/lineups/:agent` | Line-up videos for one agent |
 | `/gameplay` | Gameplay clips |
@@ -145,6 +154,29 @@ Shots and time to kill computed from the game's damage tables, with a falloff ch
 Every callout plotted on the minimap from the coordinate transform the API ships per map.
 
 ![Ascent minimap with all callouts plotted and an index grouped by side](./docs/screenshots/map-callouts.jpg)
+
+### Bundles are derived, not fetched
+
+No endpoint lists a bundle's skins. Every skin does carry a `themeUuid`, though,
+and a theme is the collection it shipped in - so
+[`src/utils/bundles.js`](./src/utils/bundles.js) groups by theme and joins
+`/v1/bundles` on by name for the promo art. That covers about 290 of 440
+collections; the rest fall back to the theme icon or a skin render, so no card
+is ever art-less.
+
+Two wrinkles worth knowing:
+
+- **`Standard` and `Random` are not bundles.** They are each weapon's default
+  skin and the randomiser entry, and they are excluded.
+- **Collections get re-released, and nothing is versioned.** Glitchpop shipped
+  twice and Magepunk three times, and the API gives every edition the identical
+  name in both endpoints. Same-named themes therefore take same-named bundles in
+  order, so each edition gets its own art, and the cards are told apart by the
+  weapons they cover rather than by an invented "2.0".
+
+The skins themselves arrive inside the weapons payload the sidebar already
+fetches, so only the theme, bundle and tier metadata (~0.4 MB) is requested, and
+only when a bundle page is opened.
 
 ### Time to kill is computed, not looked up
 
@@ -189,6 +221,8 @@ src/
 ├── data/lineups.js             # line-up catalogue
 ├── utils/valorant.js           # API grouping, filtering, callout projection
 ├── utils/ballistics.js         # damage, shots and time to kill
+├── utils/bundles.js            # skin-to-collection grouping
+├── hooks/useBundleMeta.js      # lazily fetched theme/bundle/tier data
 └── components/
     ├── layout/                 # Sidebar, Footer, LineupGallery + CSS
     └── pages/                  # one component per route

@@ -14,6 +14,8 @@ import Footer from './components/layout/Footer';
 import Agent from './components/pages/Agent';
 import Weapons from './components/pages/Weapons';
 import Compare from './components/pages/Compare';
+import Bundles from './components/pages/Bundles';
+import BundleDetail from './components/pages/BundleDetail';
 import Weapon from './components/pages/Weapon';
 import Lineups from './components/pages/Lineups';
 import AgentLineups from './components/pages/AgentLineups';
@@ -85,6 +87,8 @@ function App() {
           <Route path='/weapons' element={<Weapons weapons={weapons} {...data} />} />
           <Route path='/weapons/:id' element={<Weapon />} />
           <Route path='/compare' element={<Compare weapons={weapons} {...data} />} />
+          <Route path='/bundles' element={<Bundles weapons={weapons} {...data} />} />
+          <Route path='/bundles/:id' element={<BundleDetail weapons={weapons} {...data} />} />
           <Route path='/lineups' element={<Lineups />} />
           <Route path='/lineups/:agent' element={<AgentLineups />} />
           <Route path='/team' element={<Contact />} />

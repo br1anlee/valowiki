@@ -179,6 +179,19 @@ export default function Sidebar({ agents = [], gameMaps = [], weapons = [] }) {
             <li className="sidebar-section">
               <div className="sidebar-row">
                 <Link
+                  to="/bundles"
+                  className={`sidebar-link${
+                    pathname.startsWith("/bundles") ? " is-active" : ""
+                  }`}
+                >
+                  Bundles
+                </Link>
+              </div>
+            </li>
+
+            <li className="sidebar-section">
+              <div className="sidebar-row">
+                <Link
                   to="/compare"
                   className={`sidebar-link${
                     pathname === "/compare" ? " is-active" : ""
