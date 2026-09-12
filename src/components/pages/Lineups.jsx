@@ -6,7 +6,7 @@ export default function Lineups() {
    return (
       <div className="page">
          <header className="page-head">
-            <span className="eyebrow">Valowiki</span>
+            <span className="eyebrow">ValoREF</span>
             <h1>Line Ups</h1>
          </header>
 

@@ -9,7 +9,7 @@ export default function Maps({ gameMaps, status, onRetry }) {
    return (
       <div className="page">
          <header className="page-head">
-            <span className="eyebrow">Valowiki</span>
+            <span className="eyebrow">ValoREF</span>
             <h1>Maps</h1>
             <p>
                {status === "ready"

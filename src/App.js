@@ -70,8 +70,9 @@ function App() {
 
   const data = { status, onRetry: retry }
 
-  // PUBLIC_URL is empty in dev and on root-domain hosts; on GitHub Pages the
-  // deploy workflow sets it to "/valowiki".
+  // PUBLIC_URL is empty in dev and on root-domain hosts. On GitHub Pages the
+  // deploy workflow sets it to the repository name, which is independent of
+  // what the app calls itself.
   return (
     <Router basename={process.env.PUBLIC_URL || "/"}>
       <ScrollToTop />

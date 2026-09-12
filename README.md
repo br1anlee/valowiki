@@ -1,4 +1,4 @@
-# Valowiki
+# ValoREF
 
 A Valorant companion app for players who want to learn their agents and improve their game. Agents, maps and weapons are pulled live from the [Valorant API](https://dash.valorant-api.com/), so the roster never goes stale — new agents and maps appear automatically as Riot ships them.
 
@@ -104,7 +104,7 @@ Requires Node 18 or newer (verified on Node 26).
 
 ```bash
 git clone https://github.com/br1anlee/valowiki.git
-cd valowiki
+cd valowiki   # the repository is still named valowiki
 npm install
 npm start
 ```

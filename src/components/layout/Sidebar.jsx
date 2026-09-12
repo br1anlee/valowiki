@@ -95,7 +95,7 @@ export default function Sidebar({ agents = [], gameMaps = [], weapons = [] }) {
         </button>
         <Link to="/" className="topbar-brand">
           <img src="/images/logo.png" alt="" />
-          <span>Valowiki</span>
+          <span>ValoREF</span>
         </Link>
       </header>
 
@@ -110,7 +110,7 @@ export default function Sidebar({ agents = [], gameMaps = [], weapons = [] }) {
       <aside className={`sidebar${drawerOpen ? " is-open" : ""}`}>
         <Link to="/" className="sidebar-brand">
           <img src="/images/logo.png" alt="" />
-          <span>Valowiki</span>
+          <span>ValoREF</span>
         </Link>
 
         <SearchBox agents={agents} gameMaps={gameMaps} weapons={weapons} />
