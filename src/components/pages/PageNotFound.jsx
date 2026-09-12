@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom"
+import { asset } from "../../utils/asset";
 
 export default function PageNotFound() {
     return (
@@ -6,7 +7,7 @@ export default function PageNotFound() {
             <span className="eyebrow">Error 404</span>
             <h1>Page Not Found</h1>
             <img
-                src="/images/jett404.gif"
+                src={asset("images/jett404.gif")}
                 alt="Jett dashing away"
                 style={{ margin: "2rem auto", borderRadius: "8px", maxWidth: "480px" }}
             />
