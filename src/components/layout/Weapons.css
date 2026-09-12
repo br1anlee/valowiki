@@ -77,44 +77,103 @@
 /* --------------------------------------------------------------------------
    Weapon detail page
    -------------------------------------------------------------------------- */
-.wep-text { margin-bottom: var(--space-8); }
-
-.single-container {
+/* Renders vary from a 1.47:1 pistol to a 4.85:1 sniper, so `height: auto` made
+   the hero anywhere from 172px to 568px tall depending on the weapon - and blew
+   a 188px-wide Classic up 4.4x until it was visibly soft. A fixed box with
+   object-fit: contain keeps every weapon page the same shape and caps the
+   upscale at well under 2x. */
+.weapon-hero {
   position: relative;
-  max-width: 900px;
+  max-width: 880px;
   margin: 0 auto var(--space-16);
-  padding: var(--space-8);
-  background: linear-gradient(160deg, var(--surface-hi), var(--surface));
   border: 1px solid var(--line);
   border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--surface);
+}
+
+.weapon-hero-art {
+  position: relative;
+  display: grid;
+  place-items: center;
+  height: 260px;
+  padding: var(--space-8);
+  /* Soft pool of light behind the weapon so it doesn't float on a flat panel. */
+  background:
+    radial-gradient(120% 90% at 50% 45%, rgba(255, 70, 85, 0.1), transparent 70%),
+    linear-gradient(160deg, var(--surface-hi), var(--surface));
 }
 
 .wep-image {
-  width: 100%;
-  height: auto;
-  opacity: 1;
-  transition: opacity var(--ease);
-  backface-visibility: hidden;
+  /* A fixed render height gives every weapon the same visual weight. Source
+     renders are 92-140px tall, so this upscales by 1.2-1.8x - slight, and
+     invisible on the high-DPI screens most people read this on. Letting them
+     sit at native size instead would leave a pistol dwarfed by a sniper. */
+  height: 170px;
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.55));
+  transition: transform var(--ease);
 }
 
-/* Stat overlay fades in over the weapon render on hover. */
-.middle {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  opacity: 0;
-  transition: opacity var(--ease);
-  pointer-events: none;
+.weapon-hero:hover .wep-image { transform: scale(1.03); }
+
+/* --------------------------------------------------------------------------
+   Stat strip
+   -------------------------------------------------------------------------- */
+.weapon-hero-stats {
+  border-top: 1px solid var(--line);
+  background: var(--bg);
 }
 
-.single-container:hover .wep-image { opacity: 0.15; }
-.single-container:hover .middle { opacity: 1; }
+/* Fixed four columns so eight stats form two even rows rather than seven plus
+   an orphan. The 1px gap over a line-coloured backdrop draws the separators,
+   so no cell needs edge-case border rules. */
+.weapon-hero-stats dl {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--line);
+}
 
-.middle .text {
+.weapon-hero-stats dl > div {
+  padding: var(--space-4);
+  text-align: center;
+  background: var(--bg);
+  transition: background var(--ease);
+}
+
+.weapon-hero-stats dl > div:hover { background: var(--surface-hi); }
+
+.weapon-hero-stats dt {
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--text-dim);
+  margin-bottom: var(--space-2);
+}
+
+.weapon-hero-stats dd {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
   color: var(--text);
-  font-size: 1rem;
-  line-height: 2;
+  line-height: 1;
+}
+
+.weapon-hero-stats dd span {
+  display: block;
+  margin-top: var(--space-1);
+  font-family: var(--font-body);
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-dim);
+}
+
+@media (max-width: 600px) {
+  .weapon-hero-art { height: 180px; padding: var(--space-4); }
+  .weapon-hero-stats dl { grid-template-columns: repeat(2, 1fr); }
 }
 
 .skins-text { margin-bottom: var(--space-8); }
@@ -156,15 +215,4 @@
   height: 120px;
   object-fit: contain;
   margin-top: auto;
-}
-
-/* Touch devices have no hover, so show the stats inline instead. */
-@media (hover: none) {
-  .single-container:hover .wep-image { opacity: 1; }
-  .middle {
-    position: static;
-    transform: none;
-    opacity: 1;
-    margin-top: var(--space-6);
-  }
 }
