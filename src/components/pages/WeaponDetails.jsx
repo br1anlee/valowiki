@@ -6,7 +6,6 @@ export default function WeaponDetails({ weaponData, weaponStats, weaponShop, wea
          <div key={`skin-${idx}`}>
             <h3> {skin.displayName} </h3>
             <img
-               style={{ padding: "1.5rem" }}
                src={skin.chromas[0].fullRender}
                alt={skin.displayName}
                className="weapon-skin-image"
