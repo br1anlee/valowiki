@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom"
 import "../layout/Lineup-page.css";
 import { LINEUP_AGENTS, lineupsFor } from "../../data/lineups";
+import { asset } from "../../utils/asset";
 
 export default function Lineups() {
    return (
@@ -10,7 +11,7 @@ export default function Lineups() {
             <h1>Line Ups</h1>
          </header>
 
-         <img className="image-gif" src="/images/Sova-Lineups.jpg" alt="Sova lineup" />
+         <img className="image-gif" src={asset("images/Sova-Lineups.jpg")} alt="Sova lineup" />
 
          <h2 className="section-title">What are Line Ups?</h2>
          <p className="lineUp-description">

@@ -1,5 +1,6 @@
 import "../layout/Contact.css"
 import { FaGithub, FaLinkedin } from "react-icons/fa"
+import { asset } from "../../utils/asset";
 
 export default function Contact() {
   return (
@@ -11,7 +12,7 @@ export default function Contact() {
         </header>
         <main className="cards-contact">
         <article className="card-contact">
-          <img src="images/brian.jpg" alt="Brian Lee" />
+          <img src={asset("images/brian.jpg")} alt="Brian Lee" />
           <div className="text">
             <h3>Brian Lee</h3>
             <p className="inner-text">

@@ -2,8 +2,9 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "../layout/Home.css";
 import ValoVid from "../video/home-bg.mp4";
+import { asset } from "../../utils/asset";
 
-const POSTER = "/images/home-poster.jpg";
+const POSTER = asset("images/home-poster.jpg");
 
 export default function Home() {
   // The hero clip is 5.8 MB. Paint the poster first and only fetch the video

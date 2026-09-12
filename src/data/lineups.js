@@ -9,18 +9,20 @@
 //   node scripts/fetch-lineup-titles.mjs
 // It reads each video's real title from YouTube's public oEmbed endpoint.
 
+import { asset } from "../utils/asset";
+
 export const LINEUP_AGENTS = [
   {
     slug: "sova",
     name: "Sova",
-    banner: "/images/sovapic.jpeg",
+    banner: asset("images/sovapic.jpeg"),
     blurb:
       "Recon Bolts and Shock Darts that clear a site before your team steps onto it.",
   },
   {
     slug: "cypher",
     name: "Cypher",
-    banner: "/images/cypher.jpeg",
+    banner: asset("images/cypher.jpeg"),
     blurb:
       "Cages and trapwires that lock down flanks and buy your team information.",
   },
