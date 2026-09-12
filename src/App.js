@@ -10,6 +10,7 @@ import Maps from './components/pages/Maps';
 import MapDetail from './components/pages/MapDetail';
 import Agents from './components/pages/Agents';
 import Sidebar from './components/layout/Sidebar';
+import ScrollToTop from './components/layout/ScrollToTop';
 import Footer from './components/layout/Footer';
 import Agent from './components/pages/Agent';
 import Weapons from './components/pages/Weapons';
@@ -72,6 +73,8 @@ function App() {
   // deploy workflow sets it to "/valowiki".
   return (
     <Router basename={process.env.PUBLIC_URL || "/"}>
+      <ScrollToTop />
+
       {/* Lets keyboard users jump the sidebar, which is long once expanded. */}
       <a className="skip-link" href="#main">Skip to content</a>
 

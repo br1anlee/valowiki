@@ -1,9 +1,13 @@
 import { Link } from "react-router-dom";
 import LazyImage from "./LazyImage";
 
-export default function BundleCard({ bundle }) {
+export default function BundleCard({ bundle, onOpen }) {
   return (
-    <Link to={`/bundles/${bundle.key}`} className="card bundle-card">
+    <Link
+      to={`/bundles/${bundle.key}`}
+      className="card bundle-card"
+      onClick={onOpen}
+    >
       <LazyImage className="bundle-card-art" src={bundle.art} />
       <div className="bundle-card-body">
         <h3>{bundle.name}</h3>

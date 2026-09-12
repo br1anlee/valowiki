@@ -1,8 +1,10 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
+import { useSearchParams } from "react-router-dom";
 import "../layout/Bundles.css";
 import DataState, { SkeletonGrid } from "../layout/DataState";
 import BundleCard from "../layout/BundleCard";
 import useBundleMeta from "../../hooks/useBundleMeta";
+import useScrollMemory from "../../hooks/useScrollMemory";
 import { buildBundles } from "../../utils/bundles";
 
 const PAGE = 24;
@@ -16,13 +18,36 @@ const TIER_ORDER = [
   "Select Edition",
 ];
 
+// Filters live in the query string rather than component state, so opening a
+// bundle and pressing back returns to the same view - and so a filtered list
+// can be linked to. Defaults stay out of the URL to keep it readable.
+const DEFAULTS = { q: "", weapon: "All", tier: "All", sort: "size", full: "1", page: "1" };
+
 export default function Bundles({ weapons, status: weaponStatus, onRetry }) {
-  const [query, setQuery] = useState("");
-  const [weapon, setWeapon] = useState("All");
-  const [tier, setTier] = useState("All");
-  const [sort, setSort] = useState("size");
-  const [fullOnly, setFullOnly] = useState(true);
-  const [shown, setShown] = useState(PAGE);
+  const [params, setParams] = useSearchParams();
+
+  const read = (name) => params.get(name) ?? DEFAULTS[name];
+  const query = read("q");
+  const weapon = read("weapon");
+  const tier = read("tier");
+  const sort = read("sort");
+  const fullOnly = read("full") === "1";
+  const pageNo = Math.max(1, parseInt(read("page"), 10) || 1);
+  const shown = pageNo * PAGE;
+
+  // Changing a filter starts the list again; only "Load more" advances the page.
+  const update = (changes, { keepPage = false } = {}) => {
+    const next = new URLSearchParams(params);
+
+    Object.entries(changes).forEach(([name, value]) => {
+      if (value === DEFAULTS[name]) next.delete(name);
+      else next.set(name, value);
+    });
+    if (!keepPage) next.delete("page");
+
+    // replace: filter tweaks shouldn't each become a back-button step.
+    setParams(next, { replace: !keepPage });
+  };
 
   const meta = useBundleMeta();
 
@@ -85,11 +110,6 @@ export default function Bundles({ weapons, status: weaponStatus, onRetry }) {
       : filtered;
   }, [bundles, query, weapon, tier, sort, fullOnly, tierNameById]);
 
-  // Any change to the filters starts the list again from the top.
-  useEffect(() => {
-    setShown(PAGE);
-  }, [query, weapon, tier, sort, fullOnly]);
-
   const status =
     weaponStatus === "error" || meta.status === "error"
       ? "error"
@@ -104,6 +124,12 @@ export default function Bundles({ weapons, status: weaponStatus, onRetry }) {
 
   const page = visible.slice(0, shown);
   const remaining = visible.length - page.length;
+
+  // Keyed on the filters, so each distinct view remembers its own position.
+  const rememberScroll = useScrollMemory(
+    `bundles?${params.toString()}`,
+    status === "ready"
+  );
 
   return (
     <div className="page">
@@ -132,7 +158,7 @@ export default function Bundles({ weapons, status: weaponStatus, onRetry }) {
             className="search-input"
             placeholder="Search bundles or skins..."
             value={query}
-            onChange={(event) => setQuery(event.target.value)}
+            onChange={(event) => update({ q: event.target.value })}
             aria-label="Search bundles by name, or by a skin inside them"
           />
 
@@ -141,7 +167,7 @@ export default function Bundles({ weapons, status: weaponStatus, onRetry }) {
             <select
               className="compare-select"
               value={weapon}
-              onChange={(event) => setWeapon(event.target.value)}
+              onChange={(event) => update({ weapon: event.target.value })}
             >
               <option value="All">Any weapon</option>
               {weaponNames.map((name) => (
@@ -157,7 +183,7 @@ export default function Bundles({ weapons, status: weaponStatus, onRetry }) {
             <select
               className="compare-select"
               value={sort}
-              onChange={(event) => setSort(event.target.value)}
+              onChange={(event) => update({ sort: event.target.value })}
             >
               <option value="size">Most skins</option>
               <option value="name">A to Z</option>
@@ -171,7 +197,7 @@ export default function Bundles({ weapons, status: weaponStatus, onRetry }) {
               type="button"
               className="chip"
               aria-pressed={tier === "All"}
-              onClick={() => setTier("All")}
+              onClick={() => update({ tier: "All" })}
             >
               Any tier
             </button>
@@ -181,7 +207,7 @@ export default function Bundles({ weapons, status: weaponStatus, onRetry }) {
                 key={name}
                 className="chip"
                 aria-pressed={tier === name}
-                onClick={() => setTier((cur) => (cur === name ? "All" : name))}
+                onClick={() => update({ tier: tier === name ? "All" : name })}
               >
                 {name.replace(" Edition", "")}
               </button>
@@ -190,7 +216,7 @@ export default function Bundles({ weapons, status: weaponStatus, onRetry }) {
               type="button"
               className="chip"
               aria-pressed={fullOnly}
-              onClick={() => setFullOnly((on) => !on)}
+              onClick={() => update({ full: fullOnly ? "0" : "1" })}
               title="Hide collections that contain only one skin"
             >
               Full collections
@@ -207,7 +233,11 @@ export default function Bundles({ weapons, status: weaponStatus, onRetry }) {
           <>
             <div className="bundle-grid">
               {page.map((bundle) => (
-                <BundleCard key={bundle.key} bundle={bundle} />
+                <BundleCard
+                  key={bundle.key}
+                  bundle={bundle}
+                  onOpen={rememberScroll}
+                />
               ))}
             </div>
 
@@ -216,7 +246,7 @@ export default function Bundles({ weapons, status: weaponStatus, onRetry }) {
                 <button
                   type="button"
                   className="btn"
-                  onClick={() => setShown((n) => n + PAGE)}
+                  onClick={() => update({ page: String(pageNo + 1) }, { keepPage: true })}
                 >
                   Load {Math.min(remaining, PAGE)} more
                 </button>
