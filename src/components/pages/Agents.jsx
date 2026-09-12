@@ -53,7 +53,7 @@ export default function Agents({ agents, status, onRetry }) {
           alt="Valorant agents"
         />
         <div className="agents-hero-overlay">
-          <span className="eyebrow">Valowiki</span>
+          <span className="eyebrow">ValoREF</span>
           <h1>Agents</h1>
           <p>
             {status === "ready"

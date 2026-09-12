@@ -38,7 +38,7 @@ export default function Home() {
         />
         <div className="hero-overlay">
           <span className="eyebrow">Your Valorant Companion</span>
-          <h1 className="hero-title">Valowiki</h1>
+          <h1 className="hero-title">ValoREF</h1>
           <p className="hero-lead">
             Everything you need on agents, maps and weapons - pulled live from
             the Valorant API, so it never goes stale.
@@ -79,7 +79,7 @@ export default function Home() {
         <section className="home-about">
           <h2 className="section-title">About</h2>
           <p>
-            Valowiki is built for Valorant players who want to learn more about
+            ValoREF is built for Valorant players who want to learn more about
             their favourite agents and improve their gameplay.{" "}
             <a
               href="https://playvalorant.com/en-us/"
@@ -100,7 +100,7 @@ export default function Home() {
         </section>
 
         <p className="disclaimer">
-          Valowiki isn't endorsed by Riot Games and doesn't reflect the views or
+          ValoREF isn't endorsed by Riot Games and doesn't reflect the views or
           opinions of Riot Games or anyone officially involved in producing or
           managing Riot Games properties. Riot Games, and all associated
           properties are trademarks or registered trademarks of Riot Games, Inc.

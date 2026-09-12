@@ -42,7 +42,7 @@ export default function Weapons({ weapons, status, onRetry }) {
   return (
     <div className="page">
       <header className="page-head">
-        <span className="eyebrow">Valowiki</span>
+        <span className="eyebrow">ValoREF</span>
         <h1>Weapons</h1>
         <p>
           {status === "ready"

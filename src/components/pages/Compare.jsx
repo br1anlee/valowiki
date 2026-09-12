@@ -62,7 +62,7 @@ export default function Compare({ weapons, status, onRetry }) {
   return (
     <div className="page">
       <header className="page-head">
-        <span className="eyebrow">Valowiki</span>
+        <span className="eyebrow">ValoREF</span>
         <h1>Weapon Comparison</h1>
         <p>
           Shots and time to kill, computed from the game's own damage tables.

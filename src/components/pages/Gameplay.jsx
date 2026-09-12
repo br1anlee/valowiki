@@ -5,7 +5,7 @@ export default function Gameplay() {
     return (
         <div className="page">
             <header className="page-head">
-                <span className="eyebrow">Valowiki</span>
+                <span className="eyebrow">ValoREF</span>
                 <h1>Valorant Game Plays</h1>
             </header>
 

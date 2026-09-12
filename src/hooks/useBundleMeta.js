@@ -38,10 +38,14 @@ function load() {
   return inflight;
 }
 
-export default function useBundleMeta() {
+// `enabled` defers the request: the global search mounts this on every page but
+// should only pay for the metadata once someone actually types.
+export default function useBundleMeta(enabled = true) {
   const [meta, setMeta] = useState(cache ?? EMPTY);
   // Already cached means the first paint has data - no loading flash.
-  const [status, setStatus] = useState(cache ? "ready" : "loading");
+  const [status, setStatus] = useState(
+    cache ? "ready" : enabled ? "loading" : "idle"
+  );
   const [attempt, setAttempt] = useState(0);
 
   const retry = useCallback(() => {
@@ -56,6 +60,8 @@ export default function useBundleMeta() {
       setStatus("ready");
       return;
     }
+
+    if (!enabled) return;
 
     let cancelled = false;
     setStatus("loading");
@@ -75,7 +81,7 @@ export default function useBundleMeta() {
     return () => {
       cancelled = true;
     };
-  }, [attempt]);
+  }, [attempt, enabled]);
 
   return { ...meta, status, retry };
 }

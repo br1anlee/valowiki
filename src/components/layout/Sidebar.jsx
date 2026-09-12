@@ -7,6 +7,7 @@ import {
   playableMaps,
 } from "../../utils/valorant";
 import { LINEUP_AGENTS } from "../../data/lineups";
+import SearchBox from "./SearchBox";
 
 // Driven by the line-up catalogue, so a new agent appears here automatically.
 const LINEUP_SECTION = {
@@ -94,7 +95,7 @@ export default function Sidebar({ agents = [], gameMaps = [], weapons = [] }) {
         </button>
         <Link to="/" className="topbar-brand">
           <img src="/images/logo.png" alt="" />
-          <span>Valowiki</span>
+          <span>ValoREF</span>
         </Link>
       </header>
 
@@ -109,8 +110,10 @@ export default function Sidebar({ agents = [], gameMaps = [], weapons = [] }) {
       <aside className={`sidebar${drawerOpen ? " is-open" : ""}`}>
         <Link to="/" className="sidebar-brand">
           <img src="/images/logo.png" alt="" />
-          <span>Valowiki</span>
+          <span>ValoREF</span>
         </Link>
+
+        <SearchBox agents={agents} gameMaps={gameMaps} weapons={weapons} />
 
         <nav className="sidebar-nav" aria-label="Main">
           <ul>

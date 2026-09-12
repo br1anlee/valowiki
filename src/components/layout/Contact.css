@@ -1,6 +1,9 @@
 .cards-contact {
    display: grid;
-   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+   /* auto-fit would stretch a lone card across the whole page, so cap the
+      track rather than letting one person fill six columns. */
+   grid-template-columns: repeat(auto-fit, minmax(280px, 360px));
+   justify-content: center;
    gap: var(--space-6);
    align-items: stretch;
 }

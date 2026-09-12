@@ -1,4 +1,4 @@
-# Valowiki
+# ValoREF
 
 A Valorant companion app for players who want to learn their agents and improve their game. Agents, maps and weapons are pulled live from the [Valorant API](https://dash.valorant-api.com/), so the roster never goes stale — new agents and maps appear automatically as Riot ships them.
 
@@ -9,6 +9,14 @@ Built with React and React Router. No backend.
 ---
 
 ## Screenshots
+
+### Search
+One box over everything - agents, maps, weapons, skins, bundles and line ups -
+with a preview as you type and a full results page.
+
+| As you type | Full results |
+|---|---|
+| ![Search dropdown grouped into bundles and skins](./docs/screenshots/search-dropdown.jpg) | ![Search results page grouped by type](./docs/screenshots/search-results.jpg) |
 
 ### Home
 ![Home page with a video hero and cards linking to agents, maps and weapons](./docs/screenshots/home.jpg)
@@ -96,7 +104,7 @@ Requires Node 18 or newer (verified on Node 26).
 
 ```bash
 git clone https://github.com/br1anlee/valowiki.git
-cd valowiki
+cd valowiki   # the repository is still named valowiki
 npm install
 npm start
 ```
@@ -119,6 +127,7 @@ The app runs at `http://localhost:3000`. No API key or `.env` is needed — the 
 | URL | Description |
 |---|---|
 | `/` | Home |
+| `/search?q=` | Global search across every source |
 | `/agents` | All agents, searchable and filterable by role |
 | `/agents/:id` | Agent detail with abilities |
 | `/maps` | Maps in the standard rotation |
@@ -157,6 +166,20 @@ Shots and time to kill computed from the game's damage tables, with a falloff ch
 Every callout plotted on the minimap from the coordinate transform the API ships per map.
 
 ![Ascent minimap with all callouts plotted and an index grouped by side](./docs/screenshots/map-callouts.jpg)
+
+### Search ranks groups, not just rows
+
+[`src/utils/search.js`](./src/utils/search.js) normalises six very differently
+shaped sources into one result list, then ranks twice. Within a group an exact
+name beats a prefix beats a substring, and a match on secondary text - an
+agent's role, a bundle's weapon list - counts for less than a match on the name.
+
+Groups are then ordered by how well their best row matched. Without that,
+searching "vandal" led with the 104 bundles that merely *include* a Vandal
+rather than the weapon itself and its 106 skins.
+
+Bundle metadata is only fetched once someone types, so the search box costs
+nothing on pages that never use it.
 
 ### Bundles are derived, not fetched
 

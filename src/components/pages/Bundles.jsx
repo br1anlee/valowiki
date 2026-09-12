@@ -134,7 +134,7 @@ export default function Bundles({ weapons, status: weaponStatus, onRetry }) {
   return (
     <div className="page">
       <header className="page-head">
-        <span className="eyebrow">Valowiki</span>
+        <span className="eyebrow">ValoREF</span>
         <h1>Skin Bundles</h1>
         <p>
           {status === "ready"
