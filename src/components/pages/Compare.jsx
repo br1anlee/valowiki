@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import "../layout/Compare.css";
 import FalloffChart from "../layout/FalloffChart";
+import { ErrorState } from "../layout/DataState";
 import {
   BODY_PARTS,
   SHIELDS,
@@ -20,7 +21,7 @@ const DEFAULTS = ["Vandal", "Phantom"];
 const fmtTime = (seconds) =>
   Number.isFinite(seconds) ? `${(seconds * 1000).toFixed(0)} ms` : "-";
 
-export default function Compare({ weapons }) {
+export default function Compare({ weapons, status, onRetry }) {
   const [part, setPart] = useState("body");
   const [shield, setShield] = useState("heavy");
   const [picked, setPicked] = useState(DEFAULTS);
@@ -42,10 +43,18 @@ export default function Compare({ weapons }) {
   const setSlot = (index, name) =>
     setPicked((current) => current.map((v, i) => (i === index ? name : v)));
 
+  if (status === "error") {
+    return (
+      <div className="page">
+        <ErrorState onRetry={onRetry} what="weapon stats" />
+      </div>
+    );
+  }
+
   if (options.length === 0) {
     return (
       <div className="page">
-        <p className="empty-state">Loading weapon data...</p>
+        <div className="compare-skeleton" aria-hidden="true" />
       </div>
     );
   }

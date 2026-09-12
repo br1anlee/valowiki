@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import "../layout/Agent.css";
 import { groupAgentsByRole } from "../../utils/valorant";
+import DataState, { SkeletonGrid } from "../layout/DataState";
 
 // Editorial copy keyed by the API's role name. A role with no entry still
 // renders its card, just without a blurb, so a new role can't break the page.
@@ -16,7 +17,7 @@ const ROLE_COPY = {
     "Controllers slice up dangerous territory to set their team up for success. Smokes, slows and stuns block off a defender's vision and carve safe paths through a site.",
 };
 
-export default function Agents({ agents }) {
+export default function Agents({ agents, status, onRetry }) {
   const [query, setQuery] = useState("");
   const [activeRole, setActiveRole] = useState("All");
 
@@ -111,16 +112,22 @@ export default function Agents({ agents }) {
               </button>
             ))}
           </div>
-          <span className="result-count">
+          <span className="result-count" role="status" aria-live="polite">
             {visibleAgents.length} of {agents.length}
           </span>
         </div>
 
-        {visibleAgents.length === 0 ? (
-          <p className="empty-state">No agents match that search.</p>
-        ) : (
-          <div className="agent-grid">
-            {visibleAgents.map((agent) => (
+        <DataState
+          status={status}
+          onRetry={onRetry}
+          what="agents"
+          skeleton={<SkeletonGrid count={12} />}
+        >
+          {visibleAgents.length === 0 ? (
+            <p className="empty-state">No agents match that search.</p>
+          ) : (
+            <div className="agent-grid">
+              {visibleAgents.map((agent) => (
               <Link
                 key={agent.uuid}
                 to={`/agents/${agent.uuid}`}
@@ -136,9 +143,10 @@ export default function Agents({ agents }) {
                   </span>
                 </div>
               </Link>
-            ))}
-          </div>
-        )}
+              ))}
+            </div>
+          )}
+        </DataState>
       </div>
     </>
   );

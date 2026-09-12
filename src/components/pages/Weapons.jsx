@@ -2,8 +2,9 @@ import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import "../layout/Weapons.css";
 import { groupWeaponsByCategory } from "../../utils/valorant";
+import DataState, { SkeletonGrid } from "../layout/DataState";
 
-export default function Weapons({ weapons }) {
+export default function Weapons({ weapons, status, onRetry }) {
   const [query, setQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState("All");
 
@@ -77,15 +78,21 @@ export default function Weapons({ weapons }) {
             </button>
           ))}
         </div>
-        <span className="result-count">
+        <span className="result-count" role="status" aria-live="polite">
           {totalVisible} of {weapons.length}
         </span>
       </div>
 
-      {visibleCategories.length === 0 ? (
-        <p className="empty-state">No weapons match that search.</p>
-      ) : (
-        visibleCategories.map((group) => (
+      <DataState
+        status={status}
+        onRetry={onRetry}
+        what="weapons"
+        skeleton={<SkeletonGrid count={8} variant="wide" />}
+      >
+        {visibleCategories.length === 0 ? (
+          <p className="empty-state">No weapons match that search.</p>
+        ) : (
+          visibleCategories.map((group) => (
           <section key={group.key} className="weapon-section">
             <h2 className="section-title">{group.title}</h2>
             <div className="weapon-grid">
@@ -110,9 +117,10 @@ export default function Weapons({ weapons }) {
                 </Link>
               ))}
             </div>
-          </section>
-        ))
-      )}
+            </section>
+          ))
+        )}
+      </DataState>
     </div>
   );
 }

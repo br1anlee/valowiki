@@ -6,19 +6,28 @@ import {
   calloutPosition,
   calloutsBySide,
 } from "../../utils/valorant";
+import { ErrorState } from "../layout/DataState";
 
-export default function MapDetail({ gameMaps }) {
+export default function MapDetail({ gameMaps, status, onRetry }) {
   const { id } = useParams();
   const [active, setActive] = useState(null);
   const [showLabels, setShowLabels] = useState(true);
 
   const maps = playableMaps(gameMaps);
 
-  // Still loading - the list arrives after the first render.
-  if (gameMaps.length === 0) {
+  if (status === "error") {
     return (
       <div className="page">
-        <p className="empty-state">Loading map...</p>
+        <ErrorState onRetry={onRetry} what="this map" />
+      </div>
+    );
+  }
+
+  // The list arrives after the first render.
+  if (status === "loading" || gameMaps.length === 0) {
+    return (
+      <div className="page">
+        <div className="mapdetail-skeleton" aria-hidden="true" />
       </div>
     );
   }

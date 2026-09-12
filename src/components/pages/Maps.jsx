@@ -1,8 +1,9 @@
 import { Link } from "react-router-dom"
 import "../layout/Maps.css"
 import { playableMaps } from "../../utils/valorant"
+import DataState, { SkeletonGrid } from "../layout/DataState"
 
-export default function Maps({ gameMaps }) {
+export default function Maps({ gameMaps, status, onRetry }) {
    const maps = playableMaps(gameMaps)
 
    return (
@@ -10,9 +11,19 @@ export default function Maps({ gameMaps }) {
          <header className="page-head">
             <span className="eyebrow">Valowiki</span>
             <h1>Maps</h1>
-            <p>{maps.length} maps in the standard rotation</p>
+            <p>
+               {status === "ready"
+                  ? `${maps.length} maps in the standard rotation`
+                  : "Standard map rotation"}
+            </p>
          </header>
 
+         <DataState
+            status={status}
+            onRetry={onRetry}
+            what="maps"
+            skeleton={<SkeletonGrid count={6} variant="map" />}
+         >
          <div className="map-grid">
             {maps.map((map) => (
                <Link
@@ -35,6 +46,7 @@ export default function Maps({ gameMaps }) {
                </Link>
             ))}
          </div>
+         </DataState>
       </div>
    )
 }

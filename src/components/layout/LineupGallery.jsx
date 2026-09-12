@@ -144,7 +144,7 @@ export default function LineupGallery({ lineups, label }) {
               </button>
             ))}
           </div>
-          <span className="result-count">
+          <span className="result-count" role="status" aria-live="polite">
             {visible.length} of {lineups.length}
           </span>
         </div>

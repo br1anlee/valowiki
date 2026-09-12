@@ -27,6 +27,16 @@ Live search and role filters over the full roster. Counts update as Riot adds ag
 ### Weapons
 ![Weapons page grouped by shop category with prices in creds](./docs/screenshots/weapons.jpg)
 
+### Weapon comparison
+Shots and time to kill computed from the game's damage tables, with a falloff chart.
+
+![Weapon comparison showing shots and time to kill for two weapons side by side](./docs/screenshots/compare.jpg)
+
+### Map callouts
+Every callout plotted on the minimap from the coordinate transform the API ships per map.
+
+![Ascent minimap with all callouts plotted and an index grouped by side](./docs/screenshots/map-callouts.jpg)
+
 ### Line ups
 Video thumbnails with map tags and a lightbox player. Filter by map.
 
@@ -60,7 +70,7 @@ The app runs at `http://localhost:3000`. No API key or `.env` is needed — the 
 |---|---|
 | `npm start` | Dev server with hot reload |
 | `npm run build` | Production build into `build/` |
-| `npm test` | Unit tests for the data helpers |
+| `npm test` | Unit tests for the data and ballistics helpers |
 | `node scripts/fetch-lineup-titles.mjs` | Pull real line-up titles from YouTube (see below) |
 
 ---
@@ -73,16 +83,15 @@ The app runs at `http://localhost:3000`. No API key or `.env` is needed — the 
 | `/agents` | All agents, searchable and filterable by role |
 | `/agents/:id` | Agent detail with abilities |
 | `/maps` | Maps in the standard rotation |
-| `/maps#<map-slug>` | Jumps to a map's section, e.g. `/maps#icebox` |
+| `/maps/:id` | Minimap with every callout plotted |
 | `/weapons` | Weapons grouped by shop category |
 | `/weapons/:id` | Weapon stats and skins |
+| `/compare` | Shots and time to kill for any two weapons |
 | `/lineups` | Line-up overview |
 | `/lineups/:agent` | Line-up videos for one agent |
 | `/gameplay` | Gameplay clips |
 | `/team` | About the team |
 | `*` | 404 |
-
-Maps have no detail route, so the sidebar links to anchors on `/maps` instead.
 
 ---
 
@@ -97,6 +106,25 @@ Three things that endpoint needs handling for:
 - **`/maps` returns more than the maps you play.** Deathmatch arenas, the tutorial and *two* "The Range" entries all come back. Only standard maps carry a `tacticalDescription`, which is what `playableMaps()` filters on.
 - **Melee has no `shopData`.** It's the one weapon without a shop entry, so category grouping falls back to the equippable category and sorts it last.
 - **`shopOrderPriority` is `0` for every weapon**, so it can't order the shop. Weapons sort by cost instead, which matches the in-game buy menu.
+
+### Weapon comparison
+Shots and time to kill computed from the game's damage tables, with a falloff chart.
+
+![Weapon comparison showing shots and time to kill for two weapons side by side](./docs/screenshots/compare.jpg)
+
+### Map callouts
+Every callout plotted on the minimap from the coordinate transform the API ships per map.
+
+![Ascent minimap with all callouts plotted and an index grouped by side](./docs/screenshots/map-callouts.jpg)
+
+### Time to kill is computed, not looked up
+
+[`src/utils/ballistics.js`](./src/utils/ballistics.js) derives shots and time to
+kill from the API's own damage tables: per-pellet damage for shotguns, the band
+that applies at a given range, and `(shots - 1) / fireRate` for the timing. It
+makes the Vandal/Phantom tradeoff concrete - past 20 m the Phantom drops to 140
+head damage and needs a second bullet through a full shield, while the Vandal
+holds 160 at every range.
 
 ### Line ups are a data file
 
@@ -130,13 +158,35 @@ src/
 ├── App.js                      # routes + the three API fetches
 ├── index.css                   # design tokens, reset, shared primitives
 ├── data/lineups.js             # line-up catalogue
-├── utils/valorant.js           # API grouping, filtering, slugs
+├── utils/valorant.js           # API grouping, filtering, callout projection
+├── utils/ballistics.js         # damage, shots and time to kill
 └── components/
     ├── layout/                 # Sidebar, Footer, LineupGallery + CSS
     └── pages/                  # one component per route
 scripts/
 └── fetch-lineup-titles.mjs     # populates line-up titles from YouTube
+.github/workflows/
+├── ci.yml                      # tests + build on every push and PR
+└── deploy.yml                  # publishes to GitHub Pages
 docs/screenshots/               # images used by this README
+```
+
+### Loading and failure
+
+The three API requests are made once in [`App.js`](./src/App.js) and shared. While
+they are in flight the listing pages render skeletons; if they fail, the page
+shows a retryable error rather than an empty grid claiming "no results". Getting
+this wrong is the difference between a site that looks broken and one that
+explains itself.
+
+The 5.8 MB hero clip is not fetched until the browser is idle - a 40 KB poster
+frame carries first paint, and anyone who has asked for reduced motion keeps the
+still. Re-encoding the clip would help further; it needs ffmpeg, which the repo
+does not assume:
+
+```bash
+ffmpeg -i src/components/video/home-bg.mp4 -vf scale=1280:-2 \
+  -c:v libx264 -crf 30 -preset slow -an home-bg.mp4
 ```
 
 ### Styling

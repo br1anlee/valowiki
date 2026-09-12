@@ -1,14 +1,41 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "../layout/Home.css";
 import ValoVid from "../video/home-bg.mp4";
 
+const POSTER = "/images/home-poster.jpg";
+
 export default function Home() {
+  // The hero clip is 5.8 MB. Paint the poster first and only fetch the video
+  // once the page is idle, so it never delays first render. Anyone who has
+  // asked for reduced motion just keeps the still.
+  const [loadVideo, setLoadVideo] = useState(false);
+
+  useEffect(() => {
+    const reduced = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    if (reduced) return;
+
+    const schedule = window.requestIdleCallback || ((cb) => setTimeout(cb, 1200));
+    const cancel = window.cancelIdleCallback || clearTimeout;
+    const handle = schedule(() => setLoadVideo(true));
+
+    return () => cancel(handle);
+  }, []);
+
   return (
     <>
       <section className="hero">
-        <video className="hero-video" autoPlay loop muted playsInline>
-          <source src={ValoVid} type="video/mp4" />
-        </video>
+        <video
+          className="hero-video"
+          poster={POSTER}
+          src={loadVideo ? ValoVid : undefined}
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="none"
+          aria-hidden="true"
+        />
         <div className="hero-overlay">
           <span className="eyebrow">Your Valorant Companion</span>
           <h1 className="hero-title">Valowiki</h1>

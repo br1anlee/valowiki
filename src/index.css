@@ -121,6 +121,31 @@ code {
 }
 ::-webkit-scrollbar-thumb:hover { background: var(--val-red); }
 
+/* Visible only once focused, so keyboard users can bypass the sidebar. */
+.skip-link {
+  position: fixed;
+  top: var(--space-3);
+  left: var(--space-3);
+  z-index: 300;
+  padding: var(--space-3) var(--space-6);
+  background: var(--val-red);
+  color: #fff;
+  border-radius: var(--radius);
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  transform: translateY(-200%);
+  transition: transform var(--ease);
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+  color: #fff;
+}
+
+/* The skip target shouldn't draw a focus ring when moved to programmatically. */
+.app-main:focus { outline: none; }
+
 /* ==========================================================================
    App shell: content sits to the right of the fixed sidebar
    ========================================================================== */
