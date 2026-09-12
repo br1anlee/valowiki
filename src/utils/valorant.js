@@ -126,3 +126,26 @@ export function calloutsBySide(map) {
       items: items.sort((a, b) => a.regionName.localeCompare(b.regionName)),
     }));
 }
+
+// A line-up position may be given either as a fraction of the minimap
+// ({ x, y }) or as the name of a callout on that map ("B Main"), which is far
+// easier to write and is already the vocabulary the titles use. Returns null
+// when it cannot be resolved, so the marker is simply omitted.
+export function resolvePoint(map, value) {
+  if (!value || !map) return null;
+
+  if (typeof value === "object" && typeof value.x === "number") {
+    return { left: value.x, top: value.y };
+  }
+
+  if (typeof value !== "string") return null;
+
+  const wanted = value.trim().toLowerCase();
+  const callout = (map.callouts || []).find((c) => {
+    const region = c.regionName?.toLowerCase();
+    const full = `${c.superRegionName} ${c.regionName}`.toLowerCase();
+    return region === wanted || full === wanted;
+  });
+
+  return callout ? calloutPosition(map, callout) : null;
+}

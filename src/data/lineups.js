@@ -16,6 +16,10 @@
 //   beatenBy  how a good opponent answers it
 //   priority  1, 2, 3 - the order a new player should learn them in
 //   images    stand / aim / result screenshots, which beat video for studying
+//   from/to   where you stand and where it lands. Either a callout name on
+//             that map ("A Main") - the same vocabulary the titles use - or
+//             { x, y } as a fraction of the minimap. In development, "Place"
+//             on an agent x map page turns a click into those coordinates.
 //
 // To fill titles in automatically from YouTube, run:
 //   node scripts/fetch-lineup-titles.mjs
@@ -62,6 +66,8 @@ export const MAP_ROLES = [
 //     title: "A Main to A Site",
 //     ability: "Recon Bolt",
 //     side: "Attack",          // or "Defence"
+//     from: "A Main",               // a callout name, or { x: 0.42, y: 0.78 }
+//     to:   "A Site",               // where it lands (optional)
 //     difficulty: "Easy",      // Easy | Medium | Hard
 //     priority: 1,             // 1 = teach this one first
 //
@@ -80,10 +86,29 @@ export const MAP_ROLES = [
 //
 export const LINEUPS = [
   // --- Sova · Ascent --------------------------------------------------------
+  // The positions below are read off the titles ("CT to Boat" -> defender
+  // spawn to Boat House) and land on the callout's centre, which is close but
+  // not the exact spot you stand. Correct them with "Place" in development.
   { id: "Dm_AnZbeamE", agent: "sova", map: "Ascent", title: "B Stairs To Mid" },
   { id: "7lR2_FfKqUk", agent: "sova", map: "Ascent", title: "Hell to Heaven" },
-  { id: "RCdzMhXYvn8", agent: "sova", map: "Ascent", title: "CT to Boat" },
-  { id: "Csqb_JKoOwo", agent: "sova", map: "Ascent", title: "CT Spawn to A" },
+  {
+    id: "RCdzMhXYvn8",
+    agent: "sova",
+    map: "Ascent",
+    title: "CT to Boat",
+    side: "Defence",
+    from: "Defender Side Spawn",
+    to: "B Boat House",
+  },
+  {
+    id: "Csqb_JKoOwo",
+    agent: "sova",
+    map: "Ascent",
+    title: "CT Spawn to A",
+    side: "Defence",
+    from: "Defender Side Spawn",
+    to: "A Site",
+  },
 
   // --- Sova · Haven ---------------------------------------------------------
   {
@@ -93,7 +118,15 @@ export const LINEUPS = [
     title: "Garage Recon",
     ability: "Recon Bolt",
   },
-  { id: "K9p7Hu9zSWU", agent: "sova", map: "Haven", title: "T Spawn To Garage" },
+  {
+    id: "K9p7Hu9zSWU",
+    agent: "sova",
+    map: "Haven",
+    title: "T Spawn To Garage",
+    side: "Attack",
+    from: "Attacker Side Spawn",
+    to: "Garage",
+  },
   { id: "bY5wwODz3S4", agent: "sova", map: "Haven", title: "C Main to C Site" },
   { id: "ENo5rg6PLmg", agent: "sova", map: "Haven", title: "B Link to A" },
 
@@ -137,16 +170,41 @@ export function mapsFor(slug) {
     .map(([map, count]) => ({ map, count }));
 }
 
+export const SIDES = ["Attack", "Defence"];
+
 // The agent x map page: line ups in the order a new player should learn them,
-// with anything unprioritised after the ordered ones.
-export function lineupsOn(slug, map) {
+// with anything unprioritised after the ordered ones. `side` narrows to attack
+// or defence; entries with no side recorded are kept, since hiding them would
+// make an undocumented line up look like it does not exist.
+export function lineupsOn(slug, map, side = null) {
   return lineupsFor(slug)
     .filter((lineup) => lineup.map?.toLowerCase() === String(map).toLowerCase())
+    .filter((lineup) => !side || !lineup.side || lineup.side === side)
     .sort((a, b) => {
       const order = (l) => (typeof l.priority === "number" ? l.priority : Infinity);
       return order(a) - order(b) || (a.title || "").localeCompare(b.title || "");
     });
 }
+
+// Agents that have line ups on a given map, for the picker.
+export function agentsOn(map) {
+  const slugs = new Set(
+    LINEUPS.filter(
+      (l) => l.map?.toLowerCase() === String(map).toLowerCase()
+    ).map((l) => l.agent)
+  );
+
+  return LINEUP_AGENTS.filter((agent) => slugs.has(agent.slug));
+}
+
+// Every map any agent has line ups on.
+export const allLineupMaps = () =>
+  [...new Set(LINEUPS.map((l) => l.map).filter(Boolean))].sort((a, b) =>
+    a.localeCompare(b)
+  );
+
+export const hasPosition = (lineup) =>
+  Boolean(lineup.from && typeof lineup.from.x === "number");
 
 export const roleOn = (slug, map) =>
   MAP_ROLES.find(
@@ -157,7 +215,7 @@ export const roleOn = (slug, map) =>
 
 // Which teaching fields an entry is still missing - drives the gaps script and
 // the "help finish this" note on the page.
-export const TEACHING_FIELDS = ["ability", "side", "difficulty", "denies", "when", "beatenBy"];
+export const TEACHING_FIELDS = ["ability", "side", "difficulty", "from", "denies", "when", "beatenBy"];
 
 export const missingFields = (lineup) =>
   TEACHING_FIELDS.filter((field) => {

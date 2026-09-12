@@ -98,7 +98,7 @@ function App() {
           <Route path='/bundles/:id' element={<BundleDetail weapons={weapons} {...data} />} />
           <Route path='/lineups' element={<Lineups />} />
           <Route path='/lineups/:agent' element={<AgentLineups />} />
-          <Route path='/lineups/:agent/:map' element={<AgentMapLineups />} />
+          <Route path='/lineups/:agent/:map' element={<AgentMapLineups gameMaps={gameMaps} agents={agents} />} />
           <Route path='/team' element={<Contact />} />
           <Route path='/gameplay' element={<Gameplay />} />
           <Route path='*' element={<PageNotFound />} />

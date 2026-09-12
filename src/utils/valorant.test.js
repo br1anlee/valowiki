@@ -5,6 +5,7 @@ import {
   mapSlug,
   calloutPosition,
   calloutsBySide,
+  resolvePoint,
 } from "./valorant";
 
 const agent = (displayName, role) => ({
@@ -158,5 +159,38 @@ describe("calloutsBySide", () => {
   test("tolerates a map with no callouts", () => {
     expect(calloutsBySide({})).toEqual([]);
     expect(calloutsBySide()).toEqual([]);
+  });
+});
+
+describe("resolvePoint", () => {
+  const map = {
+    xMultiplier: 7e-5,
+    yMultiplier: -7e-5,
+    xScalarToAdd: 0.813895,
+    yScalarToAdd: 0.573242,
+    callouts: [
+      { regionName: "Main", superRegionName: "A", location: { x: 5322, y: -4710 } },
+      { regionName: "Site", superRegionName: "B", location: { x: 3000, y: -3000 } },
+    ],
+  };
+
+  test("passes through explicit coordinates", () => {
+    expect(resolvePoint(map, { x: 0.4, y: 0.8 })).toEqual({ left: 0.4, top: 0.8 });
+  });
+
+  test("resolves a callout by its region name", () => {
+    const point = resolvePoint(map, "Main");
+    expect(point.left).toBeGreaterThan(0);
+    expect(point.left).toBeLessThan(1);
+  });
+
+  test("resolves a qualified callout, and ignores case", () => {
+    expect(resolvePoint(map, "b site")).toEqual(resolvePoint(map, "Site"));
+  });
+
+  test("returns null for anything it can't place", () => {
+    expect(resolvePoint(map, "Nowhere")).toBe(null);
+    expect(resolvePoint(map, null)).toBe(null);
+    expect(resolvePoint(null, "Main")).toBe(null);
   });
 });

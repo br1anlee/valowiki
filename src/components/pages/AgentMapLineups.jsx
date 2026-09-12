@@ -1,28 +1,51 @@
 import { useState } from "react";
-import { Link, Navigate, useParams } from "react-router-dom";
+import { Link, Navigate, useParams, useSearchParams } from "react-router-dom";
 import "../layout/Lineup-page.css";
 import LineupEntry from "../layout/LineupEntry";
-import { getAgent, lineupsOn, mapsFor, roleOn } from "../../data/lineups";
+import LineupMap from "../layout/LineupMap";
+import {
+  SIDES,
+  agentsOn,
+  getAgent,
+  lineupsOn,
+  mapsFor,
+  roleOn,
+} from "../../data/lineups";
 
-// "I am Sova on Ascent" - the page the whole section is built around. Leads
-// with what your job is here, then the line ups that prove it.
-export default function AgentMapLineups() {
+// "I am Sova on Ascent." Controls on the left, the map schematic beside them,
+// and the line ups themselves underneath - the same shape as the lineup tools
+// players already use, but leading with what your job is rather than a list of
+// throws.
+export default function AgentMapLineups({ gameMaps, agents }) {
   const { agent: slug, map: mapParam } = useParams();
+  const [params, setParams] = useSearchParams();
   const [openId, setOpenId] = useState(null);
 
   const agent = getAgent(slug);
   if (!agent) return <Navigate to="/nonexistent" replace />;
 
-  // The URL carries a lowercase slug; recover the catalogue's spelling.
   const known = mapsFor(slug).find(
     (entry) => entry.map.toLowerCase() === String(mapParam).toLowerCase()
   );
   if (!known) return <Navigate to={`/lineups/${slug}`} replace />;
 
   const map = known.map;
-  const lineups = lineupsOn(slug, map);
+  const side = params.get("side");
+  const lineups = lineupsOn(slug, map, side);
   const role = roleOn(slug, map);
-  const documented = lineups.filter((l) => l.denies).length;
+
+  // Agent portraits come from the live roster rather than being stored twice.
+  const portraitFor = (name) =>
+    agents?.find((a) => a.displayName.toLowerCase() === name.toLowerCase())
+      ?.displayIconSmall;
+
+  const setSide = (value) => {
+    const next = new URLSearchParams(params);
+    if (value) next.set("side", value);
+    else next.delete("side");
+    setParams(next, { replace: true });
+    setOpenId(null);
+  };
 
   return (
     <div className="page">
@@ -38,6 +61,81 @@ export default function AgentMapLineups() {
           {agent.role}
         </p>
       </header>
+
+      <div className="lineup-layout">
+        <aside className="lineup-controls">
+          <div className="lineup-control">
+            <span className="lineup-control-label">Side</span>
+            <div className="chip-row">
+              <button
+                type="button"
+                className="chip"
+                aria-pressed={!side}
+                onClick={() => setSide(null)}
+              >
+                Both
+              </button>
+              {SIDES.map((name) => (
+                <button
+                  type="button"
+                  key={name}
+                  className="chip"
+                  aria-pressed={side === name}
+                  onClick={() => setSide(side === name ? null : name)}
+                >
+                  {name}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="lineup-control">
+            <span className="lineup-control-label">Agent</span>
+            <div className="agent-picker">
+              {agentsOn(map).map((other) => (
+                <Link
+                  key={other.slug}
+                  to={`/lineups/${other.slug}/${map.toLowerCase()}`}
+                  className={`agent-pick${other.slug === slug ? " is-active" : ""}`}
+                  title={other.name}
+                >
+                  {portraitFor(other.name) ? (
+                    <img src={portraitFor(other.name)} alt="" />
+                  ) : (
+                    <span className="agent-pick-initial">{other.name[0]}</span>
+                  )}
+                  <span>{other.name}</span>
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          <div className="lineup-control">
+            <span className="lineup-control-label">Map</span>
+            <div className="chip-row">
+              {mapsFor(slug).map((entry) => (
+                <Link
+                  key={entry.map}
+                  to={`/lineups/${slug}/${entry.map.toLowerCase()}`}
+                  className="chip"
+                  aria-current={entry.map === map ? "page" : undefined}
+                >
+                  {entry.map}
+                  <span className="chip-count">{entry.count}</span>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </aside>
+
+        <LineupMap
+          gameMaps={gameMaps}
+          mapName={map}
+          lineups={lineups}
+          selectedId={openId}
+          onSelect={(id) => setOpenId((cur) => (cur === id ? null : id))}
+        />
+      </div>
 
       {/* The "how am I useful here" answer, before any execution detail. */}
       <section className="role-brief">
@@ -59,46 +157,28 @@ export default function AgentMapLineups() {
         Line ups <small>{lineups.length}</small>
       </h2>
 
-      {documented === 0 && (
-        <p className="lineup-note">
-          These are ordered alphabetically for now. Give entries a{" "}
-          <code>priority</code> in <code>src/data/lineups.js</code> to set the
-          order a new player should learn them in.
+      {lineups.length === 0 ? (
+        <p className="empty-state">
+          No {side?.toLowerCase()} line ups recorded for {agent.name} on {map}.
         </p>
+      ) : (
+        <ol className="lineup-list">
+          {lineups.map((lineup, index) => (
+            <LineupEntry
+              key={lineup.id}
+              lineup={lineup}
+              index={index}
+              agentName={agent.name}
+              isOpen={openId === lineup.id}
+              onToggle={() =>
+                setOpenId((current) =>
+                  current === lineup.id ? null : lineup.id
+                )
+              }
+            />
+          ))}
+        </ol>
       )}
-
-      <ol className="lineup-list">
-        {lineups.map((lineup, index) => (
-          <LineupEntry
-            key={lineup.id}
-            lineup={lineup}
-            index={index}
-            agentName={agent.name}
-            isOpen={openId === lineup.id}
-            onToggle={() =>
-              setOpenId((current) => (current === lineup.id ? null : lineup.id))
-            }
-          />
-        ))}
-      </ol>
-
-      <nav className="lineup-switch">
-        <span>Other maps</span>
-        <div>
-          {mapsFor(slug)
-            .filter((entry) => entry.map !== map)
-            .map((entry) => (
-              <Link
-                key={entry.map}
-                to={`/lineups/${slug}/${entry.map.toLowerCase()}`}
-                className="chip"
-              >
-                {entry.map}
-                <span className="chip-count">{entry.count}</span>
-              </Link>
-            ))}
-        </div>
-      </nav>
     </div>
   );
 }

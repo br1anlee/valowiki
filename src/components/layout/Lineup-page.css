@@ -337,3 +337,85 @@
    color: var(--val-red);
    white-space: nowrap;
 }
+
+/* --------------------------------------------------------------------------
+   Agent x map: control panel beside the schematic
+   -------------------------------------------------------------------------- */
+.lineup-layout {
+   display: grid;
+   grid-template-columns: 260px minmax(0, 1fr);
+   gap: var(--space-6);
+   align-items: start;
+   margin-bottom: var(--space-16);
+}
+
+.lineup-controls {
+   display: flex;
+   flex-direction: column;
+   gap: var(--space-6);
+}
+
+.lineup-control-label {
+   display: block;
+   margin-bottom: var(--space-3);
+   font-family: var(--font-display);
+   font-size: 0.68rem;
+   text-transform: uppercase;
+   letter-spacing: 0.2em;
+   color: var(--val-red);
+}
+
+.lineup-control .chip { text-decoration: none; }
+.lineup-control .chip[aria-current="page"] {
+   border-color: var(--val-red);
+   color: var(--text);
+}
+
+.agent-picker {
+   display: grid;
+   grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
+   gap: var(--space-2);
+}
+
+.agent-pick {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   gap: var(--space-1);
+   padding: var(--space-2);
+   border: 1px solid var(--line);
+   border-radius: var(--radius);
+   color: var(--text-dim);
+   font-size: 0.62rem;
+   text-transform: uppercase;
+   letter-spacing: 0.08em;
+   transition: border-color var(--ease), color var(--ease), background var(--ease);
+}
+
+.agent-pick img,
+.agent-pick-initial {
+   width: 40px;
+   height: 40px;
+   border-radius: var(--radius);
+   background: var(--surface-hi);
+   display: grid;
+   place-items: center;
+   font-family: var(--font-display);
+   color: var(--text-dim);
+}
+
+.agent-pick:hover {
+   border-color: var(--text-dim);
+   color: var(--text);
+}
+
+.agent-pick.is-active {
+   border-color: var(--val-red);
+   background: rgba(255, 70, 85, 0.08);
+   color: var(--val-red);
+}
+
+@media (max-width: 900px) {
+   .lineup-layout { grid-template-columns: 1fr; }
+   .lineup-map { position: static; }
+}

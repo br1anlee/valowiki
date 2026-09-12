@@ -62,12 +62,12 @@ tier, sort, and page through 24 at a time.
 | ![Grid of skin bundles with promo art and skin counts](./docs/screenshots/bundles.jpg) | ![The Glitchpop bundle with its five skins and Exclusive Edition tiers](./docs/screenshots/bundle-detail.jpg) |
 
 ### Line ups
-Organised agent x map - "I am Sova on Ascent" - leading with what your job is
-there, then the line ups that prove it.
+Organised agent x map - "I am Sova on Ascent" - with a side filter, an agent
+picker and the map schematic, leading with what your job is there.
 
 | Pick a map | Agent x map |
 |---|---|
-| ![Sova's page listing the maps he has line ups for](./docs/screenshots/lineups.jpg) | ![Sova on Ascent, with a role brief and expandable line ups](./docs/screenshots/lineup-agent-map.jpg) |
+| ![Sova's page listing the maps he has line ups for](./docs/screenshots/lineups.jpg) | ![Sova on Ascent with the map schematic, a selected pin and its throw line](./docs/screenshots/lineup-agent-map.jpg) |
 
 ### Loading and failure
 The listing pages show skeletons while the API is in flight, and a retryable error if it fails - never an empty grid claiming there are no results.
