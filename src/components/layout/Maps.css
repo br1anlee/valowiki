@@ -5,10 +5,14 @@
 }
 
 .map-card {
+   display: flex;
+   flex-direction: column;
    overflow: hidden;
-   /* Offsets the sticky mobile bar when jumping to a #hash anchor. */
-   scroll-margin-top: calc(var(--topbar-height) + var(--space-4));
+   color: inherit;
 }
+
+.map-card-body h3 { transition: color var(--ease); }
+.map-card:hover .map-card-body h3 { color: var(--val-red); }
 
 .map-card-art {
    aspect-ratio: 16 / 9;

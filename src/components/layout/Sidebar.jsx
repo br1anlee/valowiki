@@ -5,7 +5,6 @@ import {
   groupAgentsByRole,
   groupWeaponsByCategory,
   playableMaps,
-  mapSlug,
 } from "../../utils/valorant";
 import { LINEUP_AGENTS } from "../../data/lineups";
 
@@ -48,8 +47,7 @@ export default function Sidebar({ agents = [], gameMaps = [], weapons = [] }) {
         const maps = playableMaps(gameMaps);
         return maps.length ? [{ key: "maps", title: null, items: maps }] : [];
       })(),
-      // No /maps/:id route exists, so entries jump to the section anchor.
-      hrefFor: (map) => `/maps#${mapSlug(map.displayName)}`,
+      hrefFor: (map) => `/maps/${map.uuid}`,
     },
     {
       id: "weapons",
@@ -177,6 +175,32 @@ export default function Sidebar({ agents = [], gameMaps = [], weapons = [] }) {
                 </li>
               );
             })}
+
+            <li className="sidebar-section">
+              <div className="sidebar-row">
+                <Link
+                  to="/compare"
+                  className={`sidebar-link${
+                    pathname === "/compare" ? " is-active" : ""
+                  }`}
+                >
+                  Compare
+                </Link>
+              </div>
+            </li>
+
+            <li className="sidebar-section">
+              <div className="sidebar-row">
+                <Link
+                  to="/concept"
+                  className={`sidebar-link${
+                    pathname === "/concept" ? " is-active" : ""
+                  }`}
+                >
+                  Concept
+                </Link>
+              </div>
+            </li>
 
             <li className="sidebar-section">
               <div className="sidebar-row">

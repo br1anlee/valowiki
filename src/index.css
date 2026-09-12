@@ -4,6 +4,13 @@
    Design tokens
    ========================================================================== */
 :root {
+  /* Data-visualisation series. These are the dataviz default categorical
+     slots 1 and 2, stepped for a dark surface, and validated against
+     --surface (#1a242d): CVD dE 26.8, normal-vision dE 31.8, contrast >= 3:1.
+     Kept distinct from --val-red so brand accent never reads as a series. */
+  --series-1: #3987e5;
+  --series-2: #d95926;
+
   /* Brand */
   --val-red: #ff4655;
   --val-red-dark: #d13343;

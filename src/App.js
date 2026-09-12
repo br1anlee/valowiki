@@ -7,16 +7,19 @@ import {
 import axios from 'axios'
 import Home from './components/pages/Home';
 import Maps from './components/pages/Maps';
+import MapDetail from './components/pages/MapDetail';
 import Agents from './components/pages/Agents';
 import Sidebar from './components/layout/Sidebar';
 import Footer from './components/layout/Footer';
 import Agent from './components/pages/Agent';
 import Weapons from './components/pages/Weapons';
+import Compare from './components/pages/Compare';
 import Weapon from './components/pages/Weapon';
 import Lineups from './components/pages/Lineups';
 import AgentLineups from './components/pages/AgentLineups';
 import Contact from './components/pages/Contact';
 import Gameplay from './components/pages/Gameplay';
+import Concept from './components/pages/Concept';
 import PageNotFound from './components/pages/PageNotFound';
 
 const API = 'https://valorant-api.com/v1'
@@ -51,14 +54,17 @@ function App() {
         <Routes>
           <Route path='/' element={<Home />} />
           <Route path='/maps' element={<Maps gameMaps={gameMaps} />} />
+          <Route path='/maps/:id' element={<MapDetail gameMaps={gameMaps} />} />
           <Route path='/agents' element={<Agents agents={agents} />} />
           <Route path='/agents/:id' element={<Agent />} />
           <Route path='/weapons' element={<Weapons weapons={weapons} />} />
           <Route path='/weapons/:id' element={<Weapon />} />
+          <Route path='/compare' element={<Compare weapons={weapons} />} />
           <Route path='/lineups' element={<Lineups />} />
           <Route path='/lineups/:agent' element={<AgentLineups />} />
           <Route path='/team' element={<Contact />} />
           <Route path='/gameplay' element={<Gameplay />} />
+          <Route path='/concept' element={<Concept />} />
           <Route path='*' element={<PageNotFound />} />
         </Routes>
 
