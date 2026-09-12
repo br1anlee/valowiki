@@ -1,100 +1,159 @@
-.weapons-container{
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: space-evenly;
+/* --------------------------------------------------------------------------
+   Shared page header (also used by the maps page)
+   -------------------------------------------------------------------------- */
+.page-head {
+  margin-bottom: var(--space-12);
 }
 
-.weapons-h1 {
-  padding-top: 3rem;
-  padding-bottom: 3rem;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-}
+.page-head h1 { margin: var(--space-2) 0; }
+.page-head p { color: var(--text-dim); }
 
-.weapons-h2 {
-  /* padding-top: 4rem; */
-  padding: 2rem;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  border-bottom: 3px solid #FC2B44;
-  display: inline-block;
-}
+/* --------------------------------------------------------------------------
+   Weapons listing
+   -------------------------------------------------------------------------- */
+.weapon-section { margin-bottom: var(--space-16); }
 
-.weapons-div {
-  /* padding: 0rem 40rem 5rem 40rem; */
+.weapon-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit);
-  gap: 20px;
-  /* padding: 0rem 20rem 5rem 20rem; */  max-width: 1500px;
-  margin: 0 auto;
-  padding: 0 20px;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: var(--space-4);
 }
 
-.weapons-img {
-  padding-bottom: 2rem;
-  width: 500px;
-  height: auto;
-}
-
-.weapon-skin-image {
-  width: 300px;
-  height: auto;
-}
-
-.skins-container {
+.weapon-card {
   display: flex;
-  flex-direction: reverse;
-  flex-wrap: wrap;
-  /* align-items: center; */
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.weapon-card-art {
+  display: flex;
+  align-items: center;
   justify-content: center;
-  padding: 1rem;
+  padding: var(--space-6);
+  min-height: 130px;
+  background: linear-gradient(160deg, var(--surface-hi), var(--surface));
 }
 
-.skins-text {
-  font-size: 40px;
-  margin: 8rem 0 10px 0;
+.weapon-card-art img {
+  max-height: 80px;
+  width: auto;
+  object-fit: contain;
+  transition: transform var(--ease);
 }
 
-.wep-text {
-  font-size: 50px;
-  margin-bottom: 5rem;
+.weapon-card:hover .weapon-card-art img { transform: scale(1.06); }
+
+.weapon-card-body {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-top: 1px solid var(--line);
 }
+
+.weapon-card-body h4 {
+  font-size: 1rem;
+  color: var(--text);
+  transition: color var(--ease);
+}
+
+.weapon-card:hover .weapon-card-body h4 { color: var(--val-red); }
+
+.weapon-card-cost {
+  font-family: var(--font-display);
+  color: var(--val-red);
+  font-size: 0.95rem;
+  white-space: nowrap;
+}
+
+.weapon-card-cost small {
+  color: var(--text-dim);
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+/* --------------------------------------------------------------------------
+   Weapon detail page
+   -------------------------------------------------------------------------- */
+.wep-text { margin-bottom: var(--space-8); }
 
 .single-container {
   position: relative;
-  max-width: 100%;
+  max-width: 900px;
+  margin: 0 auto var(--space-16);
+  padding: var(--space-8);
+  background: linear-gradient(160deg, var(--surface-hi), var(--surface));
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
 }
 
 .wep-image {
-opacity: 1;
-max-width: 100%;
-height: auto;
-transition: .5s ease;
-backface-visibility: hidden;
+  width: 100%;
+  height: auto;
+  opacity: 1;
+  transition: opacity var(--ease);
+  backface-visibility: hidden;
 }
 
+/* Stat overlay fades in over the weapon render on hover. */
 .middle {
-transition: .5s ease;
-opacity: 0;
-position: absolute;
-top: 50%;
-left: 50%;
-transform: translate(-50%, -50%);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  transition: opacity var(--ease);
+  pointer-events: none;
 }
 
-.single-container:hover .wep-image {
-opacity: 0.3;
+.single-container:hover .wep-image { opacity: 0.15; }
+.single-container:hover .middle { opacity: 1; }
+
+.middle .text {
+  color: var(--text);
+  font-size: 1rem;
+  line-height: 2;
 }
 
-.single-container:hover .middle {
-opacity: 1;
+.skins-text { margin-bottom: var(--space-8); }
+
+.skins-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: var(--space-4);
 }
 
-.text {
-background-color: transparent;
-color: white;
-font-size: 20px;
+.skins-container > div {
+  padding: var(--space-4);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  transition: border-color var(--ease);
+}
+
+.skins-container > div:hover { border-color: var(--val-red); }
+
+.skins-container h3 {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  margin-bottom: var(--space-3);
+}
+
+.weapon-skin-image {
+  width: 100%;
+  height: auto;
+  padding: 0 !important;
+}
+
+/* Touch devices have no hover, so show the stats inline instead. */
+@media (hover: none) {
+  .single-container:hover .wep-image { opacity: 1; }
+  .middle {
+    position: static;
+    transform: none;
+    opacity: 1;
+    margin-top: var(--space-6);
+  }
 }
