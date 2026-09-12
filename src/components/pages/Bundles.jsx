@@ -242,10 +242,10 @@ export default function Bundles({ weapons, status: weaponStatus, onRetry }) {
             </div>
 
             {remaining > 0 && (
-              <div className="bundle-more">
+              <div className="load-more">
                 <button
                   type="button"
-                  className="btn"
+                  className="btn btn-more"
                   onClick={() => update({ page: String(pageNo + 1) }, { keepPage: true })}
                 >
                   Load {Math.min(remaining, PAGE)} more

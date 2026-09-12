@@ -103,10 +103,10 @@ export default function WeaponDetails({ weaponData, weaponStats, weaponShop, wea
          <div className="skins-container">{skinList}</div>
 
          {remaining > 0 && (
-            <div className="bundle-more">
+            <div className="load-more">
                <button
                   type="button"
-                  className="btn"
+                  className="btn btn-more"
                   onClick={() => setShown((n) => n + SKIN_PAGE)}
                >
                   Load {Math.min(remaining, SKIN_PAGE)} more

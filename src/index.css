@@ -232,6 +232,36 @@ code {
   color: #fff;
 }
 
+/* A low-emphasis, repeatable action sitting under a grid - so it borrows the
+   red-on-tinted-surface language of the tags and site badges rather than the
+   off-white of .btn, which reads as unstyled across a wide empty row. */
+.btn-more {
+  background: rgba(255, 70, 85, 0.08);
+  border-color: rgba(255, 70, 85, 0.45);
+  color: var(--val-red);
+}
+
+.btn-more:hover {
+  background: var(--val-red);
+  border-color: var(--val-red);
+  color: #fff;
+}
+
+/* Wrapper for a "Load more" control and its remaining-count caption. Shared by
+   the bundle list and the weapon skin grid. */
+.load-more {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  margin-top: var(--space-12);
+}
+
+.load-more span {
+  font-size: 0.78rem;
+  color: var(--text-dim);
+}
+
 /* ==========================================================================
    Cards
    ========================================================================== */
