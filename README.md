@@ -1,6 +1,6 @@
 # ValoREF
 
-[![Live Demo](https://img.shields.io/badge/demo-live-brightgreen?style=for-the-badge)](https://br1anlee.github.io/valoref/)
+**👉 Click here to try it: [https://br1anlee.github.io/valoref/](https://br1anlee.github.io/valoref/)**
 
 A Valorant companion app for players who want to learn their agents and improve their game. Agents, maps and weapons are pulled live from the [Valorant API](https://dash.valorant-api.com/), so the roster never goes stale — new agents and maps appear automatically as Riot ships them.
 
